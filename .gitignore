@@ -1,0 +1,102 @@
+# =========================
+# OPERATING SYSTEM & EDITOR
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================
+# SECRETS (GLOBAL)
+# =========================
+# Ignore all environment variable files
+.env
+.env.*
+.env*.local
+
+# EXCEPTION: Allow the example env files to be tracked!
+!.env.example
+!web-app/.env.example
+!modal-workers/.env.example
+
+# =========================
+# PYTHON (modal-workers)
+# =========================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Modal specific / Temporary outputs
+/tmp/
+/modal-workers/outputs/
+*.wav
+*.mp3
+*.webp
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# =========================
+# NEXT.JS / T3 STACK (web-app)
+# =========================
+# Dependencies
+web-app/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js build output
+web-app/.next/
+web-app/out/
+web-app/build/
+
+# Vercel deployment cache
+.vercel/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Prisma (if using local SQLite database)
+*.db
+*.db-journal
+
+# NextAuth.js / Better Auth
+# (Ensures local JWTs or session files don't accidentally slip in)
+*.pem
+
+# Coverage directory used by testing tools
+coverage/

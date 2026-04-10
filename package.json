@@ -1,0 +1,10 @@
+{
+  "name": "sonauto-ai-music-gen-saas",
+  "version": "1.0.0",
+  "description": "Monorepo containing Next.js web app and Python modal workers",
+  "keywords": [],
+  "author": "Dhrubajyoti Bhattacharjee",
+  "private": true,
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.0"
+}
