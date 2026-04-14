@@ -5,5 +5,6 @@
   "keywords": [],
   "author": "Dhrubajyoti Bhattacharjee",
   "private": true,
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.33.0"
 }
