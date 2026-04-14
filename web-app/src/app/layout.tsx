@@ -1,8 +1,10 @@
 import "~/styles/globals.css";
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Libre_Franklin } from "next/font/google";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import { cn } from "~/lib/utils";
+import Providers from "~/components/Providers";
 
 export const metadata: Metadata = {
   title: {
@@ -13,20 +15,22 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
+const mPlusRounded1c = Libre_Franklin({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-libre-franklin",
 });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`dark ${geist.variable}`}>
-      <body className="min-h-dvh">
-        <TooltipProvider>{children}</TooltipProvider>
+    <html lang="en" className={cn("dark", mPlusRounded1c.variable)}>
+      <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
+        <Providers>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Providers>
 
-        <Toaster richColors />
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

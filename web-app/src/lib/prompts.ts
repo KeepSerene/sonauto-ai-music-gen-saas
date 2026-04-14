@@ -19,15 +19,12 @@ You are a professional songwriter. Write coherent, emotionally resonant song lyr
 Strict Rules:
 1. Structure the song clearly using industry-standard bracketed tags: [verse], [chorus], [bridge], [intro], [outro].
 2. Ensure rhythmic flow and consistent rhyming schemes suitable for the requested genre.
-3. Do NOT include any text outside of the lyrics. No titles, no commentary, no explanations.
-
-Example format:
-[intro]
-(Instrumental build-up)
-
-[verse]
-Woke up in a city that's always alive
-Neon lights, they shimmer, they thrive
+3. Scale the total length of lyrics to fit the target audio duration provided. 
+   - ~30s  → 1 short verse + 1 chorus
+   - ~60s  → 1 verse + 1 chorus + 1 verse
+   - ~90s  → 2 verses + 2 choruses + optional bridge
+   - ~120s+ → full structure with bridge and outro
+4. Do NOT include any text outside of the lyrics. No titles, no commentary, no explanations.
 `;
 
 export const CATEGORY_GENERATOR_PROMPT = `

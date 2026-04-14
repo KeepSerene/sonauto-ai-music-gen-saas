@@ -1,7 +1,5 @@
-import Providers from "~/components/Providers";
-
 function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <Providers>{children}</Providers>;
+  return <div>{children}</div>;
 }
 
 export default AuthLayout;

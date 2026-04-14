@@ -101,7 +101,7 @@ export const generateSong = inngest.createFunction(
       if (!isInstrumental) {
         if (mode === "simple" || mode === "custom-auto") {
           // AI writes the lyrics
-          finalLyrics = await generateLyrics(description);
+          finalLyrics = await generateLyrics(description, audioDuration);
         } else {
           // custom-manual: user provided lyrics verbatim
           finalLyrics = lyrics ?? null;

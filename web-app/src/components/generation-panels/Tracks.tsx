@@ -1,0 +1,442 @@
+"use client";
+
+import {
+  DownloadCloud,
+  Edit3,
+  Loader2,
+  MoreHorizontal,
+  Pause,
+  Play,
+  RefreshCw,
+  Rows4,
+  Search,
+  XCircle,
+} from "lucide-react";
+import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Badge } from "../ui/badge";
+import { cn } from "~/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { toast } from "sonner";
+import RenameDialog from "./RenameDialog";
+import TrackThumbnail from "./TrackThumbnail";
+import TracksEmptyState from "./TracksEmptyState";
+import {
+  incrementListens,
+  togglePublish,
+  renameTrack,
+  getDownloadUrl,
+} from "~/server/actions/songs";
+import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
+
+export interface Track {
+  id: string;
+  title: string;
+  createdAt: Date;
+  isInstrumental: boolean;
+  prompt: string | null;
+  lyrics: string | null;
+  thumbnailUrl: string | null;
+  audioUrl: string | null;
+  status: string;
+  generatedBy: string;
+  isPublished: boolean;
+  errorMessage: string | null;
+}
+
+function Tracks({ tracks }: { tracks: Track[] }) {
+  const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [trackToRename, setTrackToRename] = useState<Track | null>(null);
+  const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
+
+  const activeTrack = useAudioPlayerStore((state) => state.track);
+  const setTrack = useAudioPlayerStore((state) => state.setTrack);
+  const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
+  const setIsPlaying = useAudioPlayerStore((state) => state.setIsPlaying);
+  const setIsDismissed = useAudioPlayerStore((state) => state.setIsDismissed);
+
+  // ── Auto-poll while any track is pending ─────────────────────────────────
+  // Calls router.refresh() every 5s, which re-runs TracksFetcher on the
+  // server and streams fresh props back
+  useEffect(() => {
+    const hasPending = tracks.some(
+      (t) => t.status === "queued" || t.status === "generating",
+    );
+
+    if (!hasPending) return;
+
+    const id = setInterval(() => router.refresh(), 5000);
+
+    return () => clearInterval(id);
+  }, [tracks, router]);
+
+  const filteredTracks = tracks.filter(
+    (t) =>
+      t.title.toLowerCase().includes(searchQuery.trim().toLowerCase()) ||
+      t.prompt?.toLowerCase().includes(searchQuery.trim().toLowerCase()),
+  );
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      router.refresh();
+    } catch {
+      toast.error("Failed to refresh tracks. Please try again.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleTrackClick = async (track: Track) => {
+    if (loadingTrackId || !track.audioUrl) return;
+
+    // If this track is already loaded in the player, show it and toggle play/pause
+    if (activeTrack?.id === track.id) {
+      setIsDismissed(false);
+      setIsPlaying(!isPlaying);
+      return;
+    }
+
+    void incrementListens(track.id);
+    setTrack({
+      id: track.id,
+      title: track.title,
+      audioUrl: track.audioUrl,
+      thumbnailUrl: track.thumbnailUrl,
+      generatedBy: track.generatedBy,
+    });
+    setIsDismissed(false);
+  };
+
+  const handleTogglePublish = async (e: React.MouseEvent, track: Track) => {
+    e.stopPropagation();
+    try {
+      await togglePublish(track.id);
+      toast.success(
+        track.isPublished ? "Track unpublished." : "Track published!",
+      );
+    } catch {
+      toast.error("Could not update track. Please try again.");
+    }
+  };
+
+  const handleRename = async (trackId: string, newTitle: string) => {
+    try {
+      await renameTrack(trackId, newTitle);
+      toast.success("Track renamed!");
+    } catch {
+      toast.error("Could not rename track. Please try again.");
+    }
+  };
+
+  const handleDownload = async (track: Track) => {
+    if (!track.id) return;
+
+    setLoadingTrackId(track.id);
+
+    try {
+      const url = await getDownloadUrl(track.id);
+      const a = document.createElement("a");
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Download failed:", error);
+      toast.error("Download failed. Please try again.");
+    } finally {
+      setLoadingTrackId(null);
+    }
+  };
+
+  return (
+    <div className="flex min-w-0 flex-1 flex-col lg:h-full">
+      <div className="overflow-y-auto p-6 lg:flex-1">
+        {/* Search + Refresh bar */}
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="relative max-w-md flex-1">
+            <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search tracks"
+              placeholder="Search tracks..."
+              className="placeholder:text-muted-foreground/70 pl-10"
+            />
+          </div>
+
+          <Tooltip>
+            <TooltipTrigger type="button" asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={isRefreshing}
+                onClick={handleRefresh}
+                aria-label={isRefreshing ? "Refreshing..." : "Refresh"}
+                className="rounded-full"
+              >
+                {isRefreshing ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="size-4" />
+                )}
+              </Button>
+            </TooltipTrigger>
+
+            <TooltipContent side="bottom">
+              {isRefreshing ? "Refreshing..." : "Refresh"}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        {/* Track list */}
+        <ul className="space-y-2">
+          {filteredTracks.length === 0 ? (
+            <TracksEmptyState isFiltered={!!searchQuery && tracks.length > 0} />
+          ) : (
+            filteredTracks.map((track) => {
+              switch (track.status) {
+                // ── Failed ──────────────────────────────────────────────────
+                case "failed":
+                  return (
+                    <li
+                      key={track.id}
+                      className="flex cursor-not-allowed items-center gap-4 rounded-lg p-3"
+                    >
+                      <div className="bg-destructive/10 flex size-12 shrink-0 items-center justify-center rounded-md">
+                        <XCircle className="text-destructive size-6" />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <p className="text-destructive truncate text-sm font-medium">
+                          {track.errorMessage ?? "Generation failed"}
+                        </p>
+
+                        <p className="text-muted-foreground truncate text-xs">
+                          Please try generating the song again.
+                        </p>
+                      </div>
+                    </li>
+                  );
+
+                // ── Queued ──────────────────────────────────────────────────
+                case "queued":
+                  return (
+                    <li
+                      key={track.id}
+                      className="flex cursor-not-allowed items-center gap-4 rounded-lg p-3"
+                    >
+                      <div className="bg-muted flex size-12 shrink-0 items-center justify-center rounded-md">
+                        <Rows4 className="text-muted-foreground size-6 animate-pulse" />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <p className="text-muted-foreground truncate text-sm font-medium">
+                          Waiting in line...
+                        </p>
+
+                        <p className="text-muted-foreground/70 truncate text-xs">
+                          Updating automatically — hang tight.
+                        </p>
+                      </div>
+                    </li>
+                  );
+
+                // ── Generating ──────────────────────────────────────────────
+                case "generating":
+                  return (
+                    <li
+                      key={track.id}
+                      className="flex cursor-not-allowed items-center gap-4 rounded-lg p-3"
+                    >
+                      <div className="bg-muted flex size-12 shrink-0 items-center justify-center rounded-md">
+                        <Loader2 className="text-muted-foreground size-6 animate-spin" />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <p className="text-muted-foreground truncate text-sm font-medium">
+                          Generating your song...
+                        </p>
+
+                        <p className="text-muted-foreground/70 truncate text-xs">
+                          Updating automatically — this can take a minute.
+                        </p>
+                      </div>
+                    </li>
+                  );
+
+                // ── Completed ────────────────────────────────────────────────
+                default:
+                  return (
+                    <li
+                      key={track.id}
+                      onClick={() => handleTrackClick(track)}
+                      className={cn(
+                        "hover:bg-muted/50 flex items-center gap-4 rounded-lg p-3 transition-colors duration-200",
+                        track.audioUrl
+                          ? "cursor-pointer"
+                          : "cursor-not-allowed opacity-60",
+                      )}
+                    >
+                      {/* Thumbnail */}
+                      <div className="group relative size-12 shrink-0">
+                        <TrackThumbnail
+                          src={track.thumbnailUrl}
+                          alt={`Album art for ${track.title}`}
+                          className="size-12"
+                        />
+
+                        {track.audioUrl && (
+                          <div
+                            aria-label={
+                              activeTrack?.id === track.id && isPlaying
+                                ? "Pause track"
+                                : "Play track"
+                            }
+                            className="absolute inset-0 flex items-center justify-center rounded-md bg-black/20 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                          >
+                            {loadingTrackId === track.id ? (
+                              <Loader2 className="size-4 animate-spin text-white" />
+                            ) : activeTrack?.id === track.id && isPlaying ? (
+                              <Pause className="size-4 text-white" />
+                            ) : (
+                              <Play className="size-4 text-white" />
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="truncate text-sm font-medium">
+                            {track.title}
+                          </h3>
+
+                          {track.isInstrumental && (
+                            <Badge variant="outline">Instrumental</Badge>
+                          )}
+                        </div>
+
+                        {track.prompt && (
+                          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                            {track.prompt}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => handleTogglePublish(e, track)}
+                          className={cn({
+                            "border-red-500/40 text-red-400 hover:border-red-500/60":
+                              track.isPublished,
+                          })}
+                        >
+                          {track.isPublished ? "Unpublish" : "Publish"}
+                        </Button>
+
+                        <DropdownMenu>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label="More actions"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <MoreHorizontal className="size-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                            </TooltipTrigger>
+
+                            <TooltipContent side="bottom">
+                              More actions
+                            </TooltipContent>
+                          </Tooltip>
+
+                          <DropdownMenuContent align="end" className="w-40">
+                            <DropdownMenuGroup>
+                              <DropdownMenuLabel className="sr-only">
+                                More Actions
+                              </DropdownMenuLabel>
+
+                              <DropdownMenuItem
+                                onClick={(e) => e.stopPropagation()}
+                                onSelect={(e) => {
+                                  e.preventDefault();
+                                  void handleDownload(track);
+                                }}
+                                disabled={
+                                  !track.audioUrl || loadingTrackId === track.id
+                                }
+                              >
+                                {loadingTrackId === track.id ? (
+                                  <>
+                                    <Loader2 className="size-4 animate-spin" />
+                                    Downloading...
+                                  </>
+                                ) : (
+                                  <>
+                                    <DownloadCloud className="size-4" />
+                                    Download
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+
+                              <DropdownMenuItem
+                                onClick={(e) => e.stopPropagation()}
+                                onSelect={(e) => {
+                                  e.preventDefault();
+                                  setTrackToRename(track);
+                                }}
+                              >
+                                <Edit3 className="size-4" />
+                                Rename
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </li>
+                  );
+              }
+            })
+          )}
+        </ul>
+      </div>
+
+      {/* ── Rename Dialog ─────────────────────────────────────────────────── */}
+      {trackToRename && (
+        <RenameDialog
+          track={trackToRename}
+          onRename={handleRename}
+          onClose={() => setTrackToRename(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+export default Tracks;

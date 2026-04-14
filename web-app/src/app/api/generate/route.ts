@@ -112,6 +112,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // 6. Return songId immediately; frontend polls /api/songs/[songId]/status
+  // 6. Return the new song ID. The UI currently uses router.refresh() to pick up
+  // the queued song, but songId is available here for future use (e.g. toasts,
+  // deep-links, optimistic UI).
   return NextResponse.json({ songId: song.id }, { status: 202 });
 }
