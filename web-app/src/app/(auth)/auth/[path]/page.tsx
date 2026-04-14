@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { AuthView } from "@daveyplate/better-auth-ui";
 import { authViewPaths } from "@daveyplate/better-auth-ui/server";
+
+export const metadata: Metadata = {
+  title: "Auth",
+};
 
 export const dynamicParams = false;
 

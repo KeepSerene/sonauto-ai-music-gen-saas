@@ -24,15 +24,17 @@ export async function generateTags(userDescription: string): Promise<string> {
 }
 
 /**
- * Writes full structured lyrics (verse/chorus/bridge) from a description.
+ * Writes full structured lyrics (verse/chorus/bridge) from a description and an audio duration.
  */
-export async function generateLyrics(userDescription: string): Promise<string> {
+export async function generateLyrics(
+  userDescription: string,
+  audioDuration: number,
+): Promise<string> {
   const { text } = await generateText({
     model: MODEL,
     system: LYRICS_GENERATOR_PROMPT,
-    prompt: userDescription,
+    prompt: `Target duration: ${audioDuration} seconds.\n\n${userDescription}`,
   });
-
   return text.trim();
 }
 
