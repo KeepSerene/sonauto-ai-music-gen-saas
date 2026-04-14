@@ -157,7 +157,7 @@ class SongGenServer:
         song_id = str(uuid.uuid4())
 
         # 1. === GENERATE THUMBNAIL ===
-        thumbnail_prompt = f"Abstract minimalist album cover art representing {request.prompt}, vector graphic design, highly detailed, no text"
+        thumbnail_prompt = f"Mesmerizing abstract alcohol ink fluid art, vibrant swirling colors capturing the mood of {request.prompt}, featuring a striking minimalist dark silhouette, premium modern music album cover design, highly aesthetic, strong atmospheric backlighting, centered composition, no text, no typography, no detailed faces, no complex 3D geometry"
 
         image_result = self.thumbnail_pipeline(
             prompt=thumbnail_prompt,
