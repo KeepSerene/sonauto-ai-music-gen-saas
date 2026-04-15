@@ -6,7 +6,7 @@ import { Music4 } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 interface TrackThumbnailProps {
-  src: string | null | undefined;
+  src: string | null;
   alt: string;
   className?: string;
 }

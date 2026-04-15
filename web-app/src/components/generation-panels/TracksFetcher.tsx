@@ -19,7 +19,7 @@ async function TracksFetcher() {
     orderBy: { createdAt: "desc" },
   });
 
-  const songsWithThumbnails = songs.map((song) => ({
+  const songsWithUrls = songs.map((song) => ({
     id: song.id,
     title: song.title,
     createdAt: song.createdAt,
@@ -34,7 +34,7 @@ async function TracksFetcher() {
     errorMessage: song.errorMessage,
   }));
 
-  return <Tracks tracks={songsWithThumbnails} />;
+  return <Tracks tracks={songsWithUrls} />;
 }
 
 export default TracksFetcher;

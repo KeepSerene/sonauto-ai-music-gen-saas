@@ -4,7 +4,7 @@ interface AudioPlayerTrack {
   id: string | null;
   title: string | null;
   audioUrl: string | null;
-  thumbnailUrl: string | null;
+  thumbnailUrl?: string | null;
   generatedBy: string | null;
 }
 

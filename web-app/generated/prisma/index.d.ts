@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Song = $Result.DefaultSelection<Prisma.$SongPayload>
 /**
+ * Model Listen
+ * 
+ */
+export type Listen = $Result.DefaultSelection<Prisma.$ListenPayload>
+/**
  * Model Like
  * 
  */
@@ -186,6 +191,16 @@ export class PrismaClient<
     * ```
     */
   get song(): Prisma.SongDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.listen`: Exposes CRUD operations for the **Listen** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Listens
+    * const listens = await prisma.listen.findMany()
+    * ```
+    */
+  get listen(): Prisma.ListenDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.like`: Exposes CRUD operations for the **Like** model.
@@ -679,6 +694,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Song: 'Song',
+    Listen: 'Listen',
     Like: 'Like',
     Category: 'Category',
     Session: 'Session',
@@ -702,7 +718,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "song" | "like" | "category" | "session" | "account" | "verification"
+      modelProps: "user" | "song" | "listen" | "like" | "category" | "session" | "account" | "verification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -851,6 +867,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SongCountArgs<ExtArgs>
             result: $Utils.Optional<SongCountAggregateOutputType> | number
+          }
+        }
+      }
+      Listen: {
+        payload: Prisma.$ListenPayload<ExtArgs>
+        fields: Prisma.ListenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ListenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ListenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          findFirst: {
+            args: Prisma.ListenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ListenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          findMany: {
+            args: Prisma.ListenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>[]
+          }
+          create: {
+            args: Prisma.ListenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          createMany: {
+            args: Prisma.ListenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ListenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>[]
+          }
+          delete: {
+            args: Prisma.ListenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          update: {
+            args: Prisma.ListenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          deleteMany: {
+            args: Prisma.ListenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ListenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ListenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>[]
+          }
+          upsert: {
+            args: Prisma.ListenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ListenPayload>
+          }
+          aggregate: {
+            args: Prisma.ListenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateListen>
+          }
+          groupBy: {
+            args: Prisma.ListenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ListenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ListenCountArgs<ExtArgs>
+            result: $Utils.Optional<ListenCountAggregateOutputType> | number
           }
         }
       }
@@ -1322,6 +1412,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     song?: SongOmit
+    listen?: ListenOmit
     like?: LikeOmit
     category?: CategoryOmit
     session?: SessionOmit
@@ -1409,15 +1500,17 @@ export namespace Prisma {
   export type UserCountOutputType = {
     sessions: number
     accounts: number
-    likes: number
     songs: number
+    likes: number
+    listens: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
-    likes?: boolean | UserCountOutputTypeCountLikesArgs
     songs?: boolean | UserCountOutputTypeCountSongsArgs
+    likes?: boolean | UserCountOutputTypeCountLikesArgs
+    listens?: boolean | UserCountOutputTypeCountListensArgs
   }
 
   // Custom InputTypes
@@ -1448,6 +1541,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountSongsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SongWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LikeWhereInput
   }
@@ -1455,8 +1555,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountSongsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SongWhereInput
+  export type UserCountOutputTypeCountListensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListenWhereInput
   }
 
 
@@ -1465,11 +1565,13 @@ export namespace Prisma {
    */
 
   export type SongCountOutputType = {
+    listens: number
     likes: number
     categories: number
   }
 
   export type SongCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listens?: boolean | SongCountOutputTypeCountListensArgs
     likes?: boolean | SongCountOutputTypeCountLikesArgs
     categories?: boolean | SongCountOutputTypeCountCategoriesArgs
   }
@@ -1483,6 +1585,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the SongCountOutputType
      */
     select?: SongCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SongCountOutputType without action
+   */
+  export type SongCountOutputTypeCountListensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListenWhereInput
   }
 
   /**
@@ -1759,8 +1868,9 @@ export namespace Prisma {
     credits?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
-    likes?: boolean | User$likesArgs<ExtArgs>
     songs?: boolean | User$songsArgs<ExtArgs>
+    likes?: boolean | User$likesArgs<ExtArgs>
+    listens?: boolean | User$listensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1801,8 +1911,9 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
-    likes?: boolean | User$likesArgs<ExtArgs>
     songs?: boolean | User$songsArgs<ExtArgs>
+    likes?: boolean | User$likesArgs<ExtArgs>
+    listens?: boolean | User$listensArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1813,8 +1924,9 @@ export namespace Prisma {
     objects: {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       accounts: Prisma.$AccountPayload<ExtArgs>[]
-      likes: Prisma.$LikePayload<ExtArgs>[]
       songs: Prisma.$SongPayload<ExtArgs>[]
+      likes: Prisma.$LikePayload<ExtArgs>[]
+      listens: Prisma.$ListenPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2221,8 +2333,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    likes<T extends User$likesArgs<ExtArgs> = {}>(args?: Subset<T, User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     songs<T extends User$songsArgs<ExtArgs> = {}>(args?: Subset<T, User$songsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    likes<T extends User$likesArgs<ExtArgs> = {}>(args?: Subset<T, User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    listens<T extends User$listensArgs<ExtArgs> = {}>(args?: Subset<T, User$listensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2696,6 +2809,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.songs
+   */
+  export type User$songsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Song
+     */
+    select?: SongSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Song
+     */
+    omit?: SongOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SongInclude<ExtArgs> | null
+    where?: SongWhereInput
+    orderBy?: SongOrderByWithRelationInput | SongOrderByWithRelationInput[]
+    cursor?: SongWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SongScalarFieldEnum | SongScalarFieldEnum[]
+  }
+
+  /**
    * User.likes
    */
   export type User$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2720,27 +2857,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.songs
+   * User.listens
    */
-  export type User$songsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$listensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Song
+     * Select specific fields to fetch from the Listen
      */
-    select?: SongSelect<ExtArgs> | null
+    select?: ListenSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Song
+     * Omit specific fields from the Listen
      */
-    omit?: SongOmit<ExtArgs> | null
+    omit?: ListenOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SongInclude<ExtArgs> | null
-    where?: SongWhereInput
-    orderBy?: SongOrderByWithRelationInput | SongOrderByWithRelationInput[]
-    cursor?: SongWhereUniqueInput
+    include?: ListenInclude<ExtArgs> | null
+    where?: ListenWhereInput
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    cursor?: ListenWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SongScalarFieldEnum | SongScalarFieldEnum[]
+    distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
   }
 
   /**
@@ -3052,6 +3189,7 @@ export namespace Prisma {
     isPublished?: boolean
     listensCount?: boolean
     userId?: boolean
+    listens?: boolean | Song$listensArgs<ExtArgs>
     likes?: boolean | Song$likesArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     categories?: boolean | Song$categoriesArgs<ExtArgs>
@@ -3119,6 +3257,7 @@ export namespace Prisma {
 
   export type SongOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "mode" | "title" | "audioUrl" | "thumbnailUrl" | "prompt" | "lyrics" | "isInstrumental" | "status" | "errorMessage" | "audioDuration" | "isPublished" | "listensCount" | "userId", ExtArgs["result"]["song"]>
   export type SongInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    listens?: boolean | Song$listensArgs<ExtArgs>
     likes?: boolean | Song$likesArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     categories?: boolean | Song$categoriesArgs<ExtArgs>
@@ -3134,6 +3273,7 @@ export namespace Prisma {
   export type $SongPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Song"
     objects: {
+      listens: Prisma.$ListenPayload<ExtArgs>[]
       likes: Prisma.$LikePayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs>
       categories: Prisma.$CategoryPayload<ExtArgs>[]
@@ -3549,6 +3689,7 @@ export namespace Prisma {
    */
   export interface Prisma__SongClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    listens<T extends Song$listensArgs<ExtArgs> = {}>(args?: Subset<T, Song$listensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     likes<T extends Song$likesArgs<ExtArgs> = {}>(args?: Subset<T, Song$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     categories<T extends Song$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, Song$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3993,6 +4134,30 @@ export namespace Prisma {
   }
 
   /**
+   * Song.listens
+   */
+  export type Song$listensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    where?: ListenWhereInput
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    cursor?: ListenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
+  }
+
+  /**
    * Song.likes
    */
   export type Song$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4056,6 +4221,1033 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SongInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Listen
+   */
+
+  export type AggregateListen = {
+    _count: ListenCountAggregateOutputType | null
+    _min: ListenMinAggregateOutputType | null
+    _max: ListenMaxAggregateOutputType | null
+  }
+
+  export type ListenMinAggregateOutputType = {
+    userId: string | null
+    songId: string | null
+  }
+
+  export type ListenMaxAggregateOutputType = {
+    userId: string | null
+    songId: string | null
+  }
+
+  export type ListenCountAggregateOutputType = {
+    userId: number
+    songId: number
+    _all: number
+  }
+
+
+  export type ListenMinAggregateInputType = {
+    userId?: true
+    songId?: true
+  }
+
+  export type ListenMaxAggregateInputType = {
+    userId?: true
+    songId?: true
+  }
+
+  export type ListenCountAggregateInputType = {
+    userId?: true
+    songId?: true
+    _all?: true
+  }
+
+  export type ListenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Listen to aggregate.
+     */
+    where?: ListenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Listens to fetch.
+     */
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ListenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Listens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Listens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Listens
+    **/
+    _count?: true | ListenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListenMaxAggregateInputType
+  }
+
+  export type GetListenAggregateType<T extends ListenAggregateArgs> = {
+        [P in keyof T & keyof AggregateListen]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateListen[P]>
+      : GetScalarType<T[P], AggregateListen[P]>
+  }
+
+
+
+
+  export type ListenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ListenWhereInput
+    orderBy?: ListenOrderByWithAggregationInput | ListenOrderByWithAggregationInput[]
+    by: ListenScalarFieldEnum[] | ListenScalarFieldEnum
+    having?: ListenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListenCountAggregateInputType | true
+    _min?: ListenMinAggregateInputType
+    _max?: ListenMaxAggregateInputType
+  }
+
+  export type ListenGroupByOutputType = {
+    userId: string
+    songId: string
+    _count: ListenCountAggregateOutputType | null
+    _min: ListenMinAggregateOutputType | null
+    _max: ListenMaxAggregateOutputType | null
+  }
+
+  type GetListenGroupByPayload<T extends ListenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ListenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListenGroupByOutputType[P]>
+            : GetScalarType<T[P], ListenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    songId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listen"]>
+
+  export type ListenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    songId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listen"]>
+
+  export type ListenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    songId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["listen"]>
+
+  export type ListenSelectScalar = {
+    userId?: boolean
+    songId?: boolean
+  }
+
+  export type ListenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "songId", ExtArgs["result"]["listen"]>
+  export type ListenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }
+  export type ListenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }
+  export type ListenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    song?: boolean | SongDefaultArgs<ExtArgs>
+  }
+
+  export type $ListenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Listen"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      song: Prisma.$SongPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: string
+      songId: string
+    }, ExtArgs["result"]["listen"]>
+    composites: {}
+  }
+
+  type ListenGetPayload<S extends boolean | null | undefined | ListenDefaultArgs> = $Result.GetResult<Prisma.$ListenPayload, S>
+
+  type ListenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ListenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ListenCountAggregateInputType | true
+    }
+
+  export interface ListenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Listen'], meta: { name: 'Listen' } }
+    /**
+     * Find zero or one Listen that matches the filter.
+     * @param {ListenFindUniqueArgs} args - Arguments to find a Listen
+     * @example
+     * // Get one Listen
+     * const listen = await prisma.listen.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ListenFindUniqueArgs>(args: SelectSubset<T, ListenFindUniqueArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Listen that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ListenFindUniqueOrThrowArgs} args - Arguments to find a Listen
+     * @example
+     * // Get one Listen
+     * const listen = await prisma.listen.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ListenFindUniqueOrThrowArgs>(args: SelectSubset<T, ListenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Listen that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenFindFirstArgs} args - Arguments to find a Listen
+     * @example
+     * // Get one Listen
+     * const listen = await prisma.listen.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ListenFindFirstArgs>(args?: SelectSubset<T, ListenFindFirstArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Listen that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenFindFirstOrThrowArgs} args - Arguments to find a Listen
+     * @example
+     * // Get one Listen
+     * const listen = await prisma.listen.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ListenFindFirstOrThrowArgs>(args?: SelectSubset<T, ListenFindFirstOrThrowArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Listens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Listens
+     * const listens = await prisma.listen.findMany()
+     * 
+     * // Get first 10 Listens
+     * const listens = await prisma.listen.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const listenWithUserIdOnly = await prisma.listen.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends ListenFindManyArgs>(args?: SelectSubset<T, ListenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Listen.
+     * @param {ListenCreateArgs} args - Arguments to create a Listen.
+     * @example
+     * // Create one Listen
+     * const Listen = await prisma.listen.create({
+     *   data: {
+     *     // ... data to create a Listen
+     *   }
+     * })
+     * 
+     */
+    create<T extends ListenCreateArgs>(args: SelectSubset<T, ListenCreateArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Listens.
+     * @param {ListenCreateManyArgs} args - Arguments to create many Listens.
+     * @example
+     * // Create many Listens
+     * const listen = await prisma.listen.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ListenCreateManyArgs>(args?: SelectSubset<T, ListenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Listens and returns the data saved in the database.
+     * @param {ListenCreateManyAndReturnArgs} args - Arguments to create many Listens.
+     * @example
+     * // Create many Listens
+     * const listen = await prisma.listen.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Listens and only return the `userId`
+     * const listenWithUserIdOnly = await prisma.listen.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ListenCreateManyAndReturnArgs>(args?: SelectSubset<T, ListenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Listen.
+     * @param {ListenDeleteArgs} args - Arguments to delete one Listen.
+     * @example
+     * // Delete one Listen
+     * const Listen = await prisma.listen.delete({
+     *   where: {
+     *     // ... filter to delete one Listen
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ListenDeleteArgs>(args: SelectSubset<T, ListenDeleteArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Listen.
+     * @param {ListenUpdateArgs} args - Arguments to update one Listen.
+     * @example
+     * // Update one Listen
+     * const listen = await prisma.listen.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ListenUpdateArgs>(args: SelectSubset<T, ListenUpdateArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Listens.
+     * @param {ListenDeleteManyArgs} args - Arguments to filter Listens to delete.
+     * @example
+     * // Delete a few Listens
+     * const { count } = await prisma.listen.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ListenDeleteManyArgs>(args?: SelectSubset<T, ListenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Listens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Listens
+     * const listen = await prisma.listen.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ListenUpdateManyArgs>(args: SelectSubset<T, ListenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Listens and returns the data updated in the database.
+     * @param {ListenUpdateManyAndReturnArgs} args - Arguments to update many Listens.
+     * @example
+     * // Update many Listens
+     * const listen = await prisma.listen.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Listens and only return the `userId`
+     * const listenWithUserIdOnly = await prisma.listen.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ListenUpdateManyAndReturnArgs>(args: SelectSubset<T, ListenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Listen.
+     * @param {ListenUpsertArgs} args - Arguments to update or create a Listen.
+     * @example
+     * // Update or create a Listen
+     * const listen = await prisma.listen.upsert({
+     *   create: {
+     *     // ... data to create a Listen
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Listen we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ListenUpsertArgs>(args: SelectSubset<T, ListenUpsertArgs<ExtArgs>>): Prisma__ListenClient<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Listens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenCountArgs} args - Arguments to filter Listens to count.
+     * @example
+     * // Count the number of Listens
+     * const count = await prisma.listen.count({
+     *   where: {
+     *     // ... the filter for the Listens we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListenCountArgs>(
+      args?: Subset<T, ListenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Listen.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListenAggregateArgs>(args: Subset<T, ListenAggregateArgs>): Prisma.PrismaPromise<GetListenAggregateType<T>>
+
+    /**
+     * Group by Listen.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListenGroupByArgs['orderBy'] }
+        : { orderBy?: ListenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Listen model
+   */
+  readonly fields: ListenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Listen.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ListenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    song<T extends SongDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SongDefaultArgs<ExtArgs>>): Prisma__SongClient<$Result.GetResult<Prisma.$SongPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Listen model
+   */
+  interface ListenFieldRefs {
+    readonly userId: FieldRef<"Listen", 'String'>
+    readonly songId: FieldRef<"Listen", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Listen findUnique
+   */
+  export type ListenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter, which Listen to fetch.
+     */
+    where: ListenWhereUniqueInput
+  }
+
+  /**
+   * Listen findUniqueOrThrow
+   */
+  export type ListenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter, which Listen to fetch.
+     */
+    where: ListenWhereUniqueInput
+  }
+
+  /**
+   * Listen findFirst
+   */
+  export type ListenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter, which Listen to fetch.
+     */
+    where?: ListenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Listens to fetch.
+     */
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Listens.
+     */
+    cursor?: ListenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Listens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Listens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Listens.
+     */
+    distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
+  }
+
+  /**
+   * Listen findFirstOrThrow
+   */
+  export type ListenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter, which Listen to fetch.
+     */
+    where?: ListenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Listens to fetch.
+     */
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Listens.
+     */
+    cursor?: ListenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Listens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Listens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Listens.
+     */
+    distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
+  }
+
+  /**
+   * Listen findMany
+   */
+  export type ListenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter, which Listens to fetch.
+     */
+    where?: ListenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Listens to fetch.
+     */
+    orderBy?: ListenOrderByWithRelationInput | ListenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Listens.
+     */
+    cursor?: ListenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Listens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Listens.
+     */
+    skip?: number
+    distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
+  }
+
+  /**
+   * Listen create
+   */
+  export type ListenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Listen.
+     */
+    data: XOR<ListenCreateInput, ListenUncheckedCreateInput>
+  }
+
+  /**
+   * Listen createMany
+   */
+  export type ListenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Listens.
+     */
+    data: ListenCreateManyInput | ListenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Listen createManyAndReturn
+   */
+  export type ListenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * The data used to create many Listens.
+     */
+    data: ListenCreateManyInput | ListenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Listen update
+   */
+  export type ListenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Listen.
+     */
+    data: XOR<ListenUpdateInput, ListenUncheckedUpdateInput>
+    /**
+     * Choose, which Listen to update.
+     */
+    where: ListenWhereUniqueInput
+  }
+
+  /**
+   * Listen updateMany
+   */
+  export type ListenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Listens.
+     */
+    data: XOR<ListenUpdateManyMutationInput, ListenUncheckedUpdateManyInput>
+    /**
+     * Filter which Listens to update
+     */
+    where?: ListenWhereInput
+    /**
+     * Limit how many Listens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Listen updateManyAndReturn
+   */
+  export type ListenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * The data used to update Listens.
+     */
+    data: XOR<ListenUpdateManyMutationInput, ListenUncheckedUpdateManyInput>
+    /**
+     * Filter which Listens to update
+     */
+    where?: ListenWhereInput
+    /**
+     * Limit how many Listens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Listen upsert
+   */
+  export type ListenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Listen to update in case it exists.
+     */
+    where: ListenWhereUniqueInput
+    /**
+     * In case the Listen found by the `where` argument doesn't exist, create a new Listen with this data.
+     */
+    create: XOR<ListenCreateInput, ListenUncheckedCreateInput>
+    /**
+     * In case the Listen was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ListenUpdateInput, ListenUncheckedUpdateInput>
+  }
+
+  /**
+   * Listen delete
+   */
+  export type ListenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
+    /**
+     * Filter which Listen to delete.
+     */
+    where: ListenWhereUniqueInput
+  }
+
+  /**
+   * Listen deleteMany
+   */
+  export type ListenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Listens to delete
+     */
+    where?: ListenWhereInput
+    /**
+     * Limit how many Listens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Listen without action
+   */
+  export type ListenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Listen
+     */
+    select?: ListenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Listen
+     */
+    omit?: ListenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ListenInclude<ExtArgs> | null
   }
 
 
@@ -9434,6 +10626,14 @@ export namespace Prisma {
   export type SongScalarFieldEnum = (typeof SongScalarFieldEnum)[keyof typeof SongScalarFieldEnum]
 
 
+  export const ListenScalarFieldEnum: {
+    userId: 'userId',
+    songId: 'songId'
+  };
+
+  export type ListenScalarFieldEnum = (typeof ListenScalarFieldEnum)[keyof typeof ListenScalarFieldEnum]
+
+
   export const LikeScalarFieldEnum: {
     userId: 'userId',
     songId: 'songId'
@@ -9604,8 +10804,9 @@ export namespace Prisma {
     credits?: IntFilter<"User"> | number
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
-    likes?: LikeListRelationFilter
     songs?: SongListRelationFilter
+    likes?: LikeListRelationFilter
+    listens?: ListenListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -9619,8 +10820,9 @@ export namespace Prisma {
     credits?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
-    likes?: LikeOrderByRelationAggregateInput
     songs?: SongOrderByRelationAggregateInput
+    likes?: LikeOrderByRelationAggregateInput
+    listens?: ListenOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -9637,8 +10839,9 @@ export namespace Prisma {
     credits?: IntFilter<"User"> | number
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
-    likes?: LikeListRelationFilter
     songs?: SongListRelationFilter
+    likes?: LikeListRelationFilter
+    listens?: ListenListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -9691,6 +10894,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Song"> | boolean
     listensCount?: IntFilter<"Song"> | number
     userId?: StringFilter<"Song"> | string
+    listens?: ListenListRelationFilter
     likes?: LikeListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     categories?: CategoryListRelationFilter
@@ -9713,6 +10917,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     listensCount?: SortOrder
     userId?: SortOrder
+    listens?: ListenOrderByRelationAggregateInput
     likes?: LikeOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
     categories?: CategoryOrderByRelationAggregateInput
@@ -9738,6 +10943,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Song"> | boolean
     listensCount?: IntFilter<"Song"> | number
     userId?: StringFilter<"Song"> | string
+    listens?: ListenListRelationFilter
     likes?: LikeListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     categories?: CategoryListRelationFilter
@@ -9787,6 +10993,50 @@ export namespace Prisma {
     isPublished?: BoolWithAggregatesFilter<"Song"> | boolean
     listensCount?: IntWithAggregatesFilter<"Song"> | number
     userId?: StringWithAggregatesFilter<"Song"> | string
+  }
+
+  export type ListenWhereInput = {
+    AND?: ListenWhereInput | ListenWhereInput[]
+    OR?: ListenWhereInput[]
+    NOT?: ListenWhereInput | ListenWhereInput[]
+    userId?: StringFilter<"Listen"> | string
+    songId?: StringFilter<"Listen"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    song?: XOR<SongScalarRelationFilter, SongWhereInput>
+  }
+
+  export type ListenOrderByWithRelationInput = {
+    userId?: SortOrder
+    songId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    song?: SongOrderByWithRelationInput
+  }
+
+  export type ListenWhereUniqueInput = Prisma.AtLeast<{
+    userId_songId?: ListenUserIdSongIdCompoundUniqueInput
+    AND?: ListenWhereInput | ListenWhereInput[]
+    OR?: ListenWhereInput[]
+    NOT?: ListenWhereInput | ListenWhereInput[]
+    userId?: StringFilter<"Listen"> | string
+    songId?: StringFilter<"Listen"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    song?: XOR<SongScalarRelationFilter, SongWhereInput>
+  }, "userId_songId">
+
+  export type ListenOrderByWithAggregationInput = {
+    userId?: SortOrder
+    songId?: SortOrder
+    _count?: ListenCountOrderByAggregateInput
+    _max?: ListenMaxOrderByAggregateInput
+    _min?: ListenMinOrderByAggregateInput
+  }
+
+  export type ListenScalarWhereWithAggregatesInput = {
+    AND?: ListenScalarWhereWithAggregatesInput | ListenScalarWhereWithAggregatesInput[]
+    OR?: ListenScalarWhereWithAggregatesInput[]
+    NOT?: ListenScalarWhereWithAggregatesInput | ListenScalarWhereWithAggregatesInput[]
+    userId?: StringWithAggregatesFilter<"Listen"> | string
+    songId?: StringWithAggregatesFilter<"Listen"> | string
   }
 
   export type LikeWhereInput = {
@@ -10106,8 +11356,9 @@ export namespace Prisma {
     credits?: number
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
-    likes?: LikeCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -10121,8 +11372,9 @@ export namespace Prisma {
     credits?: number
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -10136,8 +11388,9 @@ export namespace Prisma {
     credits?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    likes?: LikeUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -10151,8 +11404,9 @@ export namespace Prisma {
     credits?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -10204,6 +11458,7 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+    listens?: ListenCreateNestedManyWithoutSongInput
     likes?: LikeCreateNestedManyWithoutSongInput
     user: UserCreateNestedOneWithoutSongsInput
     categories?: CategoryCreateNestedManyWithoutSongsInput
@@ -10226,6 +11481,7 @@ export namespace Prisma {
     isPublished?: boolean
     listensCount?: number
     userId: string
+    listens?: ListenUncheckedCreateNestedManyWithoutSongInput
     likes?: LikeUncheckedCreateNestedManyWithoutSongInput
     categories?: CategoryUncheckedCreateNestedManyWithoutSongsInput
   }
@@ -10246,6 +11502,7 @@ export namespace Prisma {
     audioDuration?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
+    listens?: ListenUpdateManyWithoutSongNestedInput
     likes?: LikeUpdateManyWithoutSongNestedInput
     user?: UserUpdateOneRequiredWithoutSongsNestedInput
     categories?: CategoryUpdateManyWithoutSongsNestedInput
@@ -10268,6 +11525,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+    listens?: ListenUncheckedUpdateManyWithoutSongNestedInput
     likes?: LikeUncheckedUpdateManyWithoutSongNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutSongsNestedInput
   }
@@ -10326,6 +11584,40 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenCreateInput = {
+    user: UserCreateNestedOneWithoutListensInput
+    song: SongCreateNestedOneWithoutListensInput
+  }
+
+  export type ListenUncheckedCreateInput = {
+    userId: string
+    songId: string
+  }
+
+  export type ListenUpdateInput = {
+    user?: UserUpdateOneRequiredWithoutListensNestedInput
+    song?: SongUpdateOneRequiredWithoutListensNestedInput
+  }
+
+  export type ListenUncheckedUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenCreateManyInput = {
+    userId: string
+    songId: string
+  }
+
+  export type ListenUpdateManyMutationInput = {
+
+  }
+
+  export type ListenUncheckedUpdateManyInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    songId?: StringFieldUpdateOperationsInput | string
   }
 
   export type LikeCreateInput = {
@@ -10720,16 +12012,22 @@ export namespace Prisma {
     none?: AccountWhereInput
   }
 
+  export type SongListRelationFilter = {
+    every?: SongWhereInput
+    some?: SongWhereInput
+    none?: SongWhereInput
+  }
+
   export type LikeListRelationFilter = {
     every?: LikeWhereInput
     some?: LikeWhereInput
     none?: LikeWhereInput
   }
 
-  export type SongListRelationFilter = {
-    every?: SongWhereInput
-    some?: SongWhereInput
-    none?: SongWhereInput
+  export type ListenListRelationFilter = {
+    every?: ListenWhereInput
+    some?: ListenWhereInput
+    none?: ListenWhereInput
   }
 
   export type SortOrderInput = {
@@ -10745,11 +12043,15 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type SongOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type LikeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type SongOrderByRelationAggregateInput = {
+  export type ListenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10982,6 +12284,26 @@ export namespace Prisma {
     isNot?: SongWhereInput
   }
 
+  export type ListenUserIdSongIdCompoundUniqueInput = {
+    userId: string
+    songId: string
+  }
+
+  export type ListenCountOrderByAggregateInput = {
+    userId?: SortOrder
+    songId?: SortOrder
+  }
+
+  export type ListenMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    songId?: SortOrder
+  }
+
+  export type ListenMinOrderByAggregateInput = {
+    userId?: SortOrder
+    songId?: SortOrder
+  }
+
   export type LikeUserIdSongIdCompoundUniqueInput = {
     userId: string
     songId: string
@@ -11164,6 +12486,13 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type SongCreateNestedManyWithoutUserInput = {
+    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
+    createMany?: SongCreateManyUserInputEnvelope
+    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+  }
+
   export type LikeCreateNestedManyWithoutUserInput = {
     create?: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput> | LikeCreateWithoutUserInput[] | LikeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutUserInput | LikeCreateOrConnectWithoutUserInput[]
@@ -11171,11 +12500,11 @@ export namespace Prisma {
     connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
   }
 
-  export type SongCreateNestedManyWithoutUserInput = {
-    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
-    createMany?: SongCreateManyUserInputEnvelope
-    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+  export type ListenCreateNestedManyWithoutUserInput = {
+    create?: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput> | ListenCreateWithoutUserInput[] | ListenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutUserInput | ListenCreateOrConnectWithoutUserInput[]
+    createMany?: ListenCreateManyUserInputEnvelope
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
   }
 
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
@@ -11192,6 +12521,13 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type SongUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
+    createMany?: SongCreateManyUserInputEnvelope
+    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+  }
+
   export type LikeUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput> | LikeCreateWithoutUserInput[] | LikeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutUserInput | LikeCreateOrConnectWithoutUserInput[]
@@ -11199,11 +12535,11 @@ export namespace Prisma {
     connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
   }
 
-  export type SongUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
-    createMany?: SongCreateManyUserInputEnvelope
-    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+  export type ListenUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput> | ListenCreateWithoutUserInput[] | ListenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutUserInput | ListenCreateOrConnectWithoutUserInput[]
+    createMany?: ListenCreateManyUserInputEnvelope
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -11258,6 +12594,20 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type SongUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
+    upsert?: SongUpsertWithWhereUniqueWithoutUserInput | SongUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SongCreateManyUserInputEnvelope
+    set?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    disconnect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    delete?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    update?: SongUpdateWithWhereUniqueWithoutUserInput | SongUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SongUpdateManyWithWhereWithoutUserInput | SongUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SongScalarWhereInput | SongScalarWhereInput[]
+  }
+
   export type LikeUpdateManyWithoutUserNestedInput = {
     create?: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput> | LikeCreateWithoutUserInput[] | LikeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutUserInput | LikeCreateOrConnectWithoutUserInput[]
@@ -11272,18 +12622,18 @@ export namespace Prisma {
     deleteMany?: LikeScalarWhereInput | LikeScalarWhereInput[]
   }
 
-  export type SongUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
-    upsert?: SongUpsertWithWhereUniqueWithoutUserInput | SongUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SongCreateManyUserInputEnvelope
-    set?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    disconnect?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    delete?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    update?: SongUpdateWithWhereUniqueWithoutUserInput | SongUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SongUpdateManyWithWhereWithoutUserInput | SongUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SongScalarWhereInput | SongScalarWhereInput[]
+  export type ListenUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput> | ListenCreateWithoutUserInput[] | ListenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutUserInput | ListenCreateOrConnectWithoutUserInput[]
+    upsert?: ListenUpsertWithWhereUniqueWithoutUserInput | ListenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ListenCreateManyUserInputEnvelope
+    set?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    disconnect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    delete?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    update?: ListenUpdateWithWhereUniqueWithoutUserInput | ListenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ListenUpdateManyWithWhereWithoutUserInput | ListenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
   }
 
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
@@ -11314,6 +12664,20 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type SongUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
+    upsert?: SongUpsertWithWhereUniqueWithoutUserInput | SongUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SongCreateManyUserInputEnvelope
+    set?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    disconnect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    delete?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
+    update?: SongUpdateWithWhereUniqueWithoutUserInput | SongUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SongUpdateManyWithWhereWithoutUserInput | SongUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SongScalarWhereInput | SongScalarWhereInput[]
+  }
+
   export type LikeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput> | LikeCreateWithoutUserInput[] | LikeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutUserInput | LikeCreateOrConnectWithoutUserInput[]
@@ -11328,18 +12692,25 @@ export namespace Prisma {
     deleteMany?: LikeScalarWhereInput | LikeScalarWhereInput[]
   }
 
-  export type SongUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SongCreateWithoutUserInput, SongUncheckedCreateWithoutUserInput> | SongCreateWithoutUserInput[] | SongUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SongCreateOrConnectWithoutUserInput | SongCreateOrConnectWithoutUserInput[]
-    upsert?: SongUpsertWithWhereUniqueWithoutUserInput | SongUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SongCreateManyUserInputEnvelope
-    set?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    disconnect?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    delete?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    connect?: SongWhereUniqueInput | SongWhereUniqueInput[]
-    update?: SongUpdateWithWhereUniqueWithoutUserInput | SongUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SongUpdateManyWithWhereWithoutUserInput | SongUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SongScalarWhereInput | SongScalarWhereInput[]
+  export type ListenUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput> | ListenCreateWithoutUserInput[] | ListenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutUserInput | ListenCreateOrConnectWithoutUserInput[]
+    upsert?: ListenUpsertWithWhereUniqueWithoutUserInput | ListenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ListenCreateManyUserInputEnvelope
+    set?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    disconnect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    delete?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    update?: ListenUpdateWithWhereUniqueWithoutUserInput | ListenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ListenUpdateManyWithWhereWithoutUserInput | ListenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
+  }
+
+  export type ListenCreateNestedManyWithoutSongInput = {
+    create?: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput> | ListenCreateWithoutSongInput[] | ListenUncheckedCreateWithoutSongInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutSongInput | ListenCreateOrConnectWithoutSongInput[]
+    createMany?: ListenCreateManySongInputEnvelope
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
   }
 
   export type LikeCreateNestedManyWithoutSongInput = {
@@ -11361,6 +12732,13 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput | CategoryWhereUniqueInput[]
   }
 
+  export type ListenUncheckedCreateNestedManyWithoutSongInput = {
+    create?: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput> | ListenCreateWithoutSongInput[] | ListenUncheckedCreateWithoutSongInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutSongInput | ListenCreateOrConnectWithoutSongInput[]
+    createMany?: ListenCreateManySongInputEnvelope
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+  }
+
   export type LikeUncheckedCreateNestedManyWithoutSongInput = {
     create?: XOR<LikeCreateWithoutSongInput, LikeUncheckedCreateWithoutSongInput> | LikeCreateWithoutSongInput[] | LikeUncheckedCreateWithoutSongInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutSongInput | LikeCreateOrConnectWithoutSongInput[]
@@ -11380,6 +12758,20 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ListenUpdateManyWithoutSongNestedInput = {
+    create?: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput> | ListenCreateWithoutSongInput[] | ListenUncheckedCreateWithoutSongInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutSongInput | ListenCreateOrConnectWithoutSongInput[]
+    upsert?: ListenUpsertWithWhereUniqueWithoutSongInput | ListenUpsertWithWhereUniqueWithoutSongInput[]
+    createMany?: ListenCreateManySongInputEnvelope
+    set?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    disconnect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    delete?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    update?: ListenUpdateWithWhereUniqueWithoutSongInput | ListenUpdateWithWhereUniqueWithoutSongInput[]
+    updateMany?: ListenUpdateManyWithWhereWithoutSongInput | ListenUpdateManyWithWhereWithoutSongInput[]
+    deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
   }
 
   export type LikeUpdateManyWithoutSongNestedInput = {
@@ -11417,6 +12809,20 @@ export namespace Prisma {
     deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
   }
 
+  export type ListenUncheckedUpdateManyWithoutSongNestedInput = {
+    create?: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput> | ListenCreateWithoutSongInput[] | ListenUncheckedCreateWithoutSongInput[]
+    connectOrCreate?: ListenCreateOrConnectWithoutSongInput | ListenCreateOrConnectWithoutSongInput[]
+    upsert?: ListenUpsertWithWhereUniqueWithoutSongInput | ListenUpsertWithWhereUniqueWithoutSongInput[]
+    createMany?: ListenCreateManySongInputEnvelope
+    set?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    disconnect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    delete?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+    update?: ListenUpdateWithWhereUniqueWithoutSongInput | ListenUpdateWithWhereUniqueWithoutSongInput[]
+    updateMany?: ListenUpdateManyWithWhereWithoutSongInput | ListenUpdateManyWithWhereWithoutSongInput[]
+    deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
+  }
+
   export type LikeUncheckedUpdateManyWithoutSongNestedInput = {
     create?: XOR<LikeCreateWithoutSongInput, LikeUncheckedCreateWithoutSongInput> | LikeCreateWithoutSongInput[] | LikeUncheckedCreateWithoutSongInput[]
     connectOrCreate?: LikeCreateOrConnectWithoutSongInput | LikeCreateOrConnectWithoutSongInput[]
@@ -11442,6 +12848,34 @@ export namespace Prisma {
     update?: CategoryUpdateWithWhereUniqueWithoutSongsInput | CategoryUpdateWithWhereUniqueWithoutSongsInput[]
     updateMany?: CategoryUpdateManyWithWhereWithoutSongsInput | CategoryUpdateManyWithWhereWithoutSongsInput[]
     deleteMany?: CategoryScalarWhereInput | CategoryScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutListensInput = {
+    create?: XOR<UserCreateWithoutListensInput, UserUncheckedCreateWithoutListensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutListensInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SongCreateNestedOneWithoutListensInput = {
+    create?: XOR<SongCreateWithoutListensInput, SongUncheckedCreateWithoutListensInput>
+    connectOrCreate?: SongCreateOrConnectWithoutListensInput
+    connect?: SongWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutListensNestedInput = {
+    create?: XOR<UserCreateWithoutListensInput, UserUncheckedCreateWithoutListensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutListensInput
+    upsert?: UserUpsertWithoutListensInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutListensInput, UserUpdateWithoutListensInput>, UserUncheckedUpdateWithoutListensInput>
+  }
+
+  export type SongUpdateOneRequiredWithoutListensNestedInput = {
+    create?: XOR<SongCreateWithoutListensInput, SongUncheckedCreateWithoutListensInput>
+    connectOrCreate?: SongCreateOrConnectWithoutListensInput
+    upsert?: SongUpsertWithoutListensInput
+    connect?: SongWhereUniqueInput
+    update?: XOR<XOR<SongUpdateToOneWithWhereWithoutListensInput, SongUpdateWithoutListensInput>, SongUncheckedUpdateWithoutListensInput>
   }
 
   export type UserCreateNestedOneWithoutLikesInput = {
@@ -11802,24 +13236,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type LikeCreateWithoutUserInput = {
-    song: SongCreateNestedOneWithoutLikesInput
-  }
-
-  export type LikeUncheckedCreateWithoutUserInput = {
-    songId: string
-  }
-
-  export type LikeCreateOrConnectWithoutUserInput = {
-    where: LikeWhereUniqueInput
-    create: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput>
-  }
-
-  export type LikeCreateManyUserInputEnvelope = {
-    data: LikeCreateManyUserInput | LikeCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type SongCreateWithoutUserInput = {
     id?: string
     createdAt?: Date | string
@@ -11836,6 +13252,7 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+    listens?: ListenCreateNestedManyWithoutSongInput
     likes?: LikeCreateNestedManyWithoutSongInput
     categories?: CategoryCreateNestedManyWithoutSongsInput
   }
@@ -11856,6 +13273,7 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+    listens?: ListenUncheckedCreateNestedManyWithoutSongInput
     likes?: LikeUncheckedCreateNestedManyWithoutSongInput
     categories?: CategoryUncheckedCreateNestedManyWithoutSongsInput
   }
@@ -11867,6 +13285,42 @@ export namespace Prisma {
 
   export type SongCreateManyUserInputEnvelope = {
     data: SongCreateManyUserInput | SongCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LikeCreateWithoutUserInput = {
+    song: SongCreateNestedOneWithoutLikesInput
+  }
+
+  export type LikeUncheckedCreateWithoutUserInput = {
+    songId: string
+  }
+
+  export type LikeCreateOrConnectWithoutUserInput = {
+    where: LikeWhereUniqueInput
+    create: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput>
+  }
+
+  export type LikeCreateManyUserInputEnvelope = {
+    data: LikeCreateManyUserInput | LikeCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ListenCreateWithoutUserInput = {
+    song: SongCreateNestedOneWithoutListensInput
+  }
+
+  export type ListenUncheckedCreateWithoutUserInput = {
+    songId: string
+  }
+
+  export type ListenCreateOrConnectWithoutUserInput = {
+    where: ListenWhereUniqueInput
+    create: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput>
+  }
+
+  export type ListenCreateManyUserInputEnvelope = {
+    data: ListenCreateManyUserInput | ListenCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -11935,30 +13389,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Account"> | Date | string
   }
 
-  export type LikeUpsertWithWhereUniqueWithoutUserInput = {
-    where: LikeWhereUniqueInput
-    update: XOR<LikeUpdateWithoutUserInput, LikeUncheckedUpdateWithoutUserInput>
-    create: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput>
-  }
-
-  export type LikeUpdateWithWhereUniqueWithoutUserInput = {
-    where: LikeWhereUniqueInput
-    data: XOR<LikeUpdateWithoutUserInput, LikeUncheckedUpdateWithoutUserInput>
-  }
-
-  export type LikeUpdateManyWithWhereWithoutUserInput = {
-    where: LikeScalarWhereInput
-    data: XOR<LikeUpdateManyMutationInput, LikeUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type LikeScalarWhereInput = {
-    AND?: LikeScalarWhereInput | LikeScalarWhereInput[]
-    OR?: LikeScalarWhereInput[]
-    NOT?: LikeScalarWhereInput | LikeScalarWhereInput[]
-    userId?: StringFilter<"Like"> | string
-    songId?: StringFilter<"Like"> | string
-  }
-
   export type SongUpsertWithWhereUniqueWithoutUserInput = {
     where: SongWhereUniqueInput
     update: XOR<SongUpdateWithoutUserInput, SongUncheckedUpdateWithoutUserInput>
@@ -11997,6 +13427,72 @@ export namespace Prisma {
     userId?: StringFilter<"Song"> | string
   }
 
+  export type LikeUpsertWithWhereUniqueWithoutUserInput = {
+    where: LikeWhereUniqueInput
+    update: XOR<LikeUpdateWithoutUserInput, LikeUncheckedUpdateWithoutUserInput>
+    create: XOR<LikeCreateWithoutUserInput, LikeUncheckedCreateWithoutUserInput>
+  }
+
+  export type LikeUpdateWithWhereUniqueWithoutUserInput = {
+    where: LikeWhereUniqueInput
+    data: XOR<LikeUpdateWithoutUserInput, LikeUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LikeUpdateManyWithWhereWithoutUserInput = {
+    where: LikeScalarWhereInput
+    data: XOR<LikeUpdateManyMutationInput, LikeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LikeScalarWhereInput = {
+    AND?: LikeScalarWhereInput | LikeScalarWhereInput[]
+    OR?: LikeScalarWhereInput[]
+    NOT?: LikeScalarWhereInput | LikeScalarWhereInput[]
+    userId?: StringFilter<"Like"> | string
+    songId?: StringFilter<"Like"> | string
+  }
+
+  export type ListenUpsertWithWhereUniqueWithoutUserInput = {
+    where: ListenWhereUniqueInput
+    update: XOR<ListenUpdateWithoutUserInput, ListenUncheckedUpdateWithoutUserInput>
+    create: XOR<ListenCreateWithoutUserInput, ListenUncheckedCreateWithoutUserInput>
+  }
+
+  export type ListenUpdateWithWhereUniqueWithoutUserInput = {
+    where: ListenWhereUniqueInput
+    data: XOR<ListenUpdateWithoutUserInput, ListenUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ListenUpdateManyWithWhereWithoutUserInput = {
+    where: ListenScalarWhereInput
+    data: XOR<ListenUpdateManyMutationInput, ListenUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ListenScalarWhereInput = {
+    AND?: ListenScalarWhereInput | ListenScalarWhereInput[]
+    OR?: ListenScalarWhereInput[]
+    NOT?: ListenScalarWhereInput | ListenScalarWhereInput[]
+    userId?: StringFilter<"Listen"> | string
+    songId?: StringFilter<"Listen"> | string
+  }
+
+  export type ListenCreateWithoutSongInput = {
+    user: UserCreateNestedOneWithoutListensInput
+  }
+
+  export type ListenUncheckedCreateWithoutSongInput = {
+    userId: string
+  }
+
+  export type ListenCreateOrConnectWithoutSongInput = {
+    where: ListenWhereUniqueInput
+    create: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput>
+  }
+
+  export type ListenCreateManySongInputEnvelope = {
+    data: ListenCreateManySongInput | ListenCreateManySongInput[]
+    skipDuplicates?: boolean
+  }
+
   export type LikeCreateWithoutSongInput = {
     user: UserCreateNestedOneWithoutLikesInput
   }
@@ -12027,6 +13523,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSongsInput = {
@@ -12041,6 +13538,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSongsInput = {
@@ -12061,6 +13559,22 @@ export namespace Prisma {
   export type CategoryCreateOrConnectWithoutSongsInput = {
     where: CategoryWhereUniqueInput
     create: XOR<CategoryCreateWithoutSongsInput, CategoryUncheckedCreateWithoutSongsInput>
+  }
+
+  export type ListenUpsertWithWhereUniqueWithoutSongInput = {
+    where: ListenWhereUniqueInput
+    update: XOR<ListenUpdateWithoutSongInput, ListenUncheckedUpdateWithoutSongInput>
+    create: XOR<ListenCreateWithoutSongInput, ListenUncheckedCreateWithoutSongInput>
+  }
+
+  export type ListenUpdateWithWhereUniqueWithoutSongInput = {
+    where: ListenWhereUniqueInput
+    data: XOR<ListenUpdateWithoutSongInput, ListenUncheckedUpdateWithoutSongInput>
+  }
+
+  export type ListenUpdateManyWithWhereWithoutSongInput = {
+    where: ListenScalarWhereInput
+    data: XOR<ListenUpdateManyMutationInput, ListenUncheckedUpdateManyWithoutSongInput>
   }
 
   export type LikeUpsertWithWhereUniqueWithoutSongInput = {
@@ -12102,6 +13616,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSongsInput = {
@@ -12116,6 +13631,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithWhereUniqueWithoutSongsInput = {
@@ -12142,6 +13658,182 @@ export namespace Prisma {
     name?: StringFilter<"Category"> | string
   }
 
+  export type UserCreateWithoutListensInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    credits?: number
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    songs?: SongCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutListensInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    credits?: number
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutListensInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutListensInput, UserUncheckedCreateWithoutListensInput>
+  }
+
+  export type SongCreateWithoutListensInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mode?: string
+    title: string
+    audioUrl?: string | null
+    thumbnailUrl?: string | null
+    prompt?: string | null
+    lyrics?: string | null
+    isInstrumental?: boolean
+    status?: string
+    errorMessage?: string | null
+    audioDuration?: number
+    isPublished?: boolean
+    listensCount?: number
+    likes?: LikeCreateNestedManyWithoutSongInput
+    user: UserCreateNestedOneWithoutSongsInput
+    categories?: CategoryCreateNestedManyWithoutSongsInput
+  }
+
+  export type SongUncheckedCreateWithoutListensInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mode?: string
+    title: string
+    audioUrl?: string | null
+    thumbnailUrl?: string | null
+    prompt?: string | null
+    lyrics?: string | null
+    isInstrumental?: boolean
+    status?: string
+    errorMessage?: string | null
+    audioDuration?: number
+    isPublished?: boolean
+    listensCount?: number
+    userId: string
+    likes?: LikeUncheckedCreateNestedManyWithoutSongInput
+    categories?: CategoryUncheckedCreateNestedManyWithoutSongsInput
+  }
+
+  export type SongCreateOrConnectWithoutListensInput = {
+    where: SongWhereUniqueInput
+    create: XOR<SongCreateWithoutListensInput, SongUncheckedCreateWithoutListensInput>
+  }
+
+  export type UserUpsertWithoutListensInput = {
+    update: XOR<UserUpdateWithoutListensInput, UserUncheckedUpdateWithoutListensInput>
+    create: XOR<UserCreateWithoutListensInput, UserUncheckedCreateWithoutListensInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutListensInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutListensInput, UserUncheckedUpdateWithoutListensInput>
+  }
+
+  export type UserUpdateWithoutListensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    credits?: IntFieldUpdateOperationsInput | number
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    songs?: SongUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutListensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    credits?: IntFieldUpdateOperationsInput | number
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type SongUpsertWithoutListensInput = {
+    update: XOR<SongUpdateWithoutListensInput, SongUncheckedUpdateWithoutListensInput>
+    create: XOR<SongCreateWithoutListensInput, SongUncheckedCreateWithoutListensInput>
+    where?: SongWhereInput
+  }
+
+  export type SongUpdateToOneWithWhereWithoutListensInput = {
+    where?: SongWhereInput
+    data: XOR<SongUpdateWithoutListensInput, SongUncheckedUpdateWithoutListensInput>
+  }
+
+  export type SongUpdateWithoutListensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mode?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    lyrics?: NullableStringFieldUpdateOperationsInput | string | null
+    isInstrumental?: BoolFieldUpdateOperationsInput | boolean
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: FloatFieldUpdateOperationsInput | number
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    listensCount?: IntFieldUpdateOperationsInput | number
+    likes?: LikeUpdateManyWithoutSongNestedInput
+    user?: UserUpdateOneRequiredWithoutSongsNestedInput
+    categories?: CategoryUpdateManyWithoutSongsNestedInput
+  }
+
+  export type SongUncheckedUpdateWithoutListensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mode?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    lyrics?: NullableStringFieldUpdateOperationsInput | string | null
+    isInstrumental?: BoolFieldUpdateOperationsInput | boolean
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    audioDuration?: FloatFieldUpdateOperationsInput | number
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    listensCount?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    likes?: LikeUncheckedUpdateManyWithoutSongNestedInput
+    categories?: CategoryUncheckedUpdateManyWithoutSongsNestedInput
+  }
+
   export type UserCreateWithoutLikesInput = {
     id: string
     name: string
@@ -12154,6 +13846,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -12168,6 +13861,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -12191,6 +13885,7 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+    listens?: ListenCreateNestedManyWithoutSongInput
     user: UserCreateNestedOneWithoutSongsInput
     categories?: CategoryCreateNestedManyWithoutSongsInput
   }
@@ -12212,6 +13907,7 @@ export namespace Prisma {
     isPublished?: boolean
     listensCount?: number
     userId: string
+    listens?: ListenUncheckedCreateNestedManyWithoutSongInput
     categories?: CategoryUncheckedCreateNestedManyWithoutSongsInput
   }
 
@@ -12243,6 +13939,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -12257,6 +13954,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SongUpsertWithoutLikesInput = {
@@ -12286,6 +13984,7 @@ export namespace Prisma {
     audioDuration?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
+    listens?: ListenUpdateManyWithoutSongNestedInput
     user?: UserUpdateOneRequiredWithoutSongsNestedInput
     categories?: CategoryUpdateManyWithoutSongsNestedInput
   }
@@ -12307,6 +14006,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+    listens?: ListenUncheckedUpdateManyWithoutSongNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutSongsNestedInput
   }
 
@@ -12326,6 +14026,7 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+    listens?: ListenCreateNestedManyWithoutSongInput
     likes?: LikeCreateNestedManyWithoutSongInput
     user: UserCreateNestedOneWithoutSongsInput
   }
@@ -12347,6 +14048,7 @@ export namespace Prisma {
     isPublished?: boolean
     listensCount?: number
     userId: string
+    listens?: ListenUncheckedCreateNestedManyWithoutSongInput
     likes?: LikeUncheckedCreateNestedManyWithoutSongInput
   }
 
@@ -12381,8 +14083,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     credits?: number
     accounts?: AccountCreateNestedManyWithoutUserInput
-    likes?: LikeCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -12395,8 +14098,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     credits?: number
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
-    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -12425,8 +14129,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     credits?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUpdateManyWithoutUserNestedInput
-    likes?: LikeUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -12439,8 +14144,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     credits?: IntFieldUpdateOperationsInput | number
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
-    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -12453,8 +14159,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     credits?: number
     sessions?: SessionCreateNestedManyWithoutUserInput
-    likes?: LikeCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -12467,8 +14174,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     credits?: number
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
-    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -12497,8 +14205,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     credits?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUpdateManyWithoutUserNestedInput
-    likes?: LikeUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -12511,8 +14220,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     credits?: IntFieldUpdateOperationsInput | number
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
-    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -12540,10 +14250,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type LikeCreateManyUserInput = {
-    songId: string
-  }
-
   export type SongCreateManyUserInput = {
     id?: string
     createdAt?: Date | string
@@ -12560,6 +14266,14 @@ export namespace Prisma {
     audioDuration?: number
     isPublished?: boolean
     listensCount?: number
+  }
+
+  export type LikeCreateManyUserInput = {
+    songId: string
+  }
+
+  export type ListenCreateManyUserInput = {
+    songId: string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -12637,18 +14351,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type LikeUpdateWithoutUserInput = {
-    song?: SongUpdateOneRequiredWithoutLikesNestedInput
-  }
-
-  export type LikeUncheckedUpdateWithoutUserInput = {
-    songId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type LikeUncheckedUpdateManyWithoutUserInput = {
-    songId?: StringFieldUpdateOperationsInput | string
-  }
-
   export type SongUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12665,6 +14367,7 @@ export namespace Prisma {
     audioDuration?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
+    listens?: ListenUpdateManyWithoutSongNestedInput
     likes?: LikeUpdateManyWithoutSongNestedInput
     categories?: CategoryUpdateManyWithoutSongsNestedInput
   }
@@ -12685,6 +14388,7 @@ export namespace Prisma {
     audioDuration?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
+    listens?: ListenUncheckedUpdateManyWithoutSongNestedInput
     likes?: LikeUncheckedUpdateManyWithoutSongNestedInput
     categories?: CategoryUncheckedUpdateManyWithoutSongsNestedInput
   }
@@ -12707,8 +14411,48 @@ export namespace Prisma {
     listensCount?: IntFieldUpdateOperationsInput | number
   }
 
+  export type LikeUpdateWithoutUserInput = {
+    song?: SongUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type LikeUncheckedUpdateWithoutUserInput = {
+    songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LikeUncheckedUpdateManyWithoutUserInput = {
+    songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenUpdateWithoutUserInput = {
+    song?: SongUpdateOneRequiredWithoutListensNestedInput
+  }
+
+  export type ListenUncheckedUpdateWithoutUserInput = {
+    songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenUncheckedUpdateManyWithoutUserInput = {
+    songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenCreateManySongInput = {
+    userId: string
+  }
+
   export type LikeCreateManySongInput = {
     userId: string
+  }
+
+  export type ListenUpdateWithoutSongInput = {
+    user?: UserUpdateOneRequiredWithoutListensNestedInput
+  }
+
+  export type ListenUncheckedUpdateWithoutSongInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListenUncheckedUpdateManyWithoutSongInput = {
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type LikeUpdateWithoutSongInput = {
@@ -12754,6 +14498,7 @@ export namespace Prisma {
     audioDuration?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
+    listens?: ListenUpdateManyWithoutSongNestedInput
     likes?: LikeUpdateManyWithoutSongNestedInput
     user?: UserUpdateOneRequiredWithoutSongsNestedInput
   }
@@ -12775,6 +14520,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     listensCount?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
+    listens?: ListenUncheckedUpdateManyWithoutSongNestedInput
     likes?: LikeUncheckedUpdateManyWithoutSongNestedInput
   }
 

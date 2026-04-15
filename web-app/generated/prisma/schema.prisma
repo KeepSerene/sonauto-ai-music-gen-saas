@@ -22,9 +22,10 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
-  credits       Int       @default(100)
-  likes         Like[]
+  credits       Int       @default(20)
   songs         Song[]
+  likes         Like[]
+  listens       Listen[]
 
   @@unique([email])
   @@map("user")
@@ -46,6 +47,7 @@ model Song {
   audioDuration  Float      @default(60)
   isPublished    Boolean    @default(false)
   listensCount   Int        @default(0)
+  listens        Listen[]
   likes          Like[]
   userId         String
   user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -54,6 +56,16 @@ model Song {
   @@index([userId])
   @@index([listensCount])
   @@map("song")
+}
+
+model Listen {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  songId String
+  song   Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@id([userId, songId])
+  @@map("listen")
 }
 
 model Like {

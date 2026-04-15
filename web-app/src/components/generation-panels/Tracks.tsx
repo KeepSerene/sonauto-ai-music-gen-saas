@@ -91,6 +91,7 @@ function Tracks({ tracks }: { tracks: Track[] }) {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
+
     try {
       router.refresh();
     } catch {

@@ -81,19 +81,94 @@ export async function togglePublish(trackId: string): Promise<void> {
 }
 
 /**
- * Increments the listen count for a track. This is a fire-and-forget action:
- * no ownership check (play counts are public), no revalidation (cosmetic counter).
- * Caller should `void` this — errors are swallowed intentionally.
+ * Increments the listen count for a track.
+ * Ensures unique listens per user by checking the Listen join table.
+ * This is a fire-and-forget action; errors are swallowed intentionally.
  */
 export async function incrementListens(trackId: string): Promise<void> {
-  await db.song
-    .update({
-      where: { id: trackId },
-      data: { listensCount: { increment: 1 } },
-    })
-    .catch(() => {
-      // Swallow — a failed listen counter should never break playback
+  try {
+    const userId = await getAuthenticatedUserId();
+
+    await db.$transaction(async (tx) => {
+      const existingListen = await tx.listen.findUnique({
+        where: {
+          userId_songId: {
+            userId,
+            songId: trackId,
+          },
+        },
+      });
+
+      if (!existingListen) {
+        await tx.listen.create({
+          data: {
+            userId,
+            songId: trackId,
+          },
+        });
+
+        await tx.song.update({
+          where: { id: trackId },
+          data: { listensCount: { increment: 1 } },
+        });
+      }
     });
+  } catch (error) {
+    // Swallow — a failed listen counter update should never break audio playback
+    console.error("Failed to increment unique listen:", error);
+  }
+}
+
+/**
+ * Toggles a like for a specific track.
+ * Enforces that the song exists and is either published or owned by the user.
+ * Uses a transaction to ensure atomic checking and toggling of the Like record.
+ */
+export async function toggleLike(trackId: string): Promise<void> {
+  const userId = await getAuthenticatedUserId();
+
+  await db.$transaction(async (tx) => {
+    // Verify the song exists and is eligible to be liked
+    const song = await tx.song.findUnique({
+      where: { id: trackId },
+      select: { isPublished: true, userId: true },
+    });
+
+    if (!song) throw new Error("Song not found.");
+
+    // Users can only like published songs, unless it's their own private draft
+    if (!song.isPublished && song.userId !== userId) {
+      throw new Error("Unauthorized: cannot like a private track.");
+    }
+
+    const existingLike = await tx.like.findUnique({
+      where: {
+        userId_songId: {
+          userId,
+          songId: trackId,
+        },
+      },
+    });
+
+    // Toggle the like state
+    if (existingLike) {
+      await tx.like.delete({
+        where: {
+          userId_songId: {
+            userId,
+            songId: trackId,
+          },
+        },
+      });
+    } else {
+      await tx.like.create({
+        data: {
+          userId,
+          songId: trackId,
+        },
+      });
+    }
+  });
 }
 
 /**

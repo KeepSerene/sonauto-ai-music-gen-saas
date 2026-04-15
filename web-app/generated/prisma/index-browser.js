@@ -151,6 +151,11 @@ exports.Prisma.SongScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.ListenScalarFieldEnum = {
+  userId: 'userId',
+  songId: 'songId'
+};
+
 exports.Prisma.LikeScalarFieldEnum = {
   userId: 'userId',
   songId: 'songId'
@@ -216,6 +221,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   User: 'User',
   Song: 'Song',
+  Listen: 'Listen',
   Like: 'Like',
   Category: 'Category',
   Session: 'Session',
