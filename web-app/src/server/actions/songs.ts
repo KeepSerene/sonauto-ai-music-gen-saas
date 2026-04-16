@@ -2,18 +2,17 @@
 
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { auth } from "~/server/better-auth";
 import { db } from "~/server/db";
 import { env } from "~/env";
+import { getSession } from "../better-auth/server";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function getAuthenticatedUserId(): Promise<string> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.user) throw new Error("Unauthorized");
 

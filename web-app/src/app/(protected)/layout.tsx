@@ -1,19 +1,17 @@
-import { auth } from "~/server/better-auth";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import AppSidebar from "~/components/AppSidebar";
 import { db } from "~/server/db";
 import AudioPlayer from "~/components/AudioPlayer";
 import AppHeader from "~/components/AppHeader";
+import { getSession } from "~/server/better-auth/server";
+import CheckoutSuccessModal from "~/components/CheckoutSuccessModal";
 
 // Layout for all protected routes
 async function ProtectedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.user) return redirect("/auth/sign-in");
 
@@ -35,6 +33,8 @@ async function ProtectedLayout({
       </div>
 
       <AudioPlayer />
+
+      <CheckoutSuccessModal />
     </SidebarProvider>
   );
 }

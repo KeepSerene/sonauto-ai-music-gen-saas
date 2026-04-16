@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Music2, User2 } from "lucide-react";
+import { CreditCard, LayoutDashboard, Music2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +16,13 @@ import Link from "next/link";
 import { Separator } from "./ui/separator";
 import { UserButton } from "@daveyplate/better-auth-ui";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
+import { authClient } from "~/server/better-auth/client";
+import {
+  POLAR_PRODUCER_PACK_ID,
+  POLAR_STARTER_PACK_ID,
+  POLAR_STUDIO_PACK_ID,
+} from "~/lib/constants";
 
 interface AppSidebarProps {
   user: {
@@ -39,6 +46,21 @@ const items = [
 export default function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+
+  const handleUpgrade = async () => {
+    try {
+      await authClient.checkout({
+        products: [
+          POLAR_STARTER_PACK_ID,
+          POLAR_PRODUCER_PACK_ID,
+          POLAR_STUDIO_PACK_ID,
+        ],
+      });
+    } catch (error) {
+      console.error("Failed to upgrade:", error);
+      toast.error("Failed to upgrade your pack.");
+    }
+  };
 
   return (
     <Sidebar>
@@ -81,7 +103,12 @@ export default function AppSidebar({ user }: AppSidebarProps) {
             <span className="text-muted-foreground">Credits</span>
           </div>
 
-          <Button type="button" variant="outline" size="sm" className="">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleUpgrade}
+          >
             Upgrade
           </Button>
         </div>
@@ -92,9 +119,9 @@ export default function AppSidebar({ user }: AppSidebarProps) {
           size="default"
           additionalLinks={[
             {
-              label: "Customer Portal",
-              href: "/customer-portal",
-              icon: <User2 className="size-4" />,
+              label: "Billing",
+              href: "/billing",
+              icon: <CreditCard className="size-4" />,
             },
           ]}
         />

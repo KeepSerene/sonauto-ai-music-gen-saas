@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const mPlusRounded1c = Libre_Franklin({
+const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
   variable: "--font-libre-franklin",
 });
@@ -24,7 +24,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn("dark", mPlusRounded1c.variable)}>
+    <html
+      lang="en"
+      className={cn("dark", libreFranklin.variable)}
+      data-scroll-behavior="smooth"
+    >
       <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
         <Providers>
           <TooltipProvider>{children}</TooltipProvider>

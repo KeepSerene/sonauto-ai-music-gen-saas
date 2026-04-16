@@ -1,15 +1,12 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "~/server/better-auth";
 import { db } from "~/server/db";
 import Tracks from "./Tracks";
+import { getSession } from "~/server/better-auth/server";
 
 async function TracksFetcher() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.user) return redirect("/auth/sign-in");
 

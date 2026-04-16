@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { z } from "zod";
 import { inngest } from "~/inngest/client";
-import { auth } from "~/server/better-auth";
 import { db } from "~/server/db";
+import { getSession } from "~/server/better-auth/server";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INPUT VALIDATION
@@ -46,7 +45,7 @@ const generateSchema = z.discriminatedUnion("mode", [
 
 export async function POST(req: NextRequest) {
   // 1. Auth check
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
 
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

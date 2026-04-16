@@ -1,9 +1,8 @@
 import { Music4 } from "lucide-react";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import TrackCard from "~/components/dashboard/TrackCard";
-import { auth } from "~/server/better-auth";
+import { getSession } from "~/server/better-auth/server";
 import { db } from "~/server/db";
 
 export const metadata: Metadata = {
@@ -11,9 +10,7 @@ export const metadata: Metadata = {
 };
 
 async function DashboardPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   if (!session?.user) return redirect("/auth/sign-in");
 

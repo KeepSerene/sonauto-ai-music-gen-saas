@@ -21,7 +21,7 @@ type TrackCardProps = Song & {
 
 function TrackCard({ track }: { track: TrackCardProps }) {
   const [isLoadingLike, setIsLoadingLike] = useState(false);
-  const [isLiked, setIsLiked] = useState(track.hasLiked);
+  const [hasLiked, setHasLiked] = useState(track.hasLiked);
   const [likesCount, setLikesCount] = useState(track._count.likes);
 
   const activeTrack = useAudioPlayerStore((state) => state.track);
@@ -57,8 +57,8 @@ function TrackCard({ track }: { track: TrackCardProps }) {
 
     try {
       await toggleLike(track.id);
-      setIsLiked((prev) => !prev);
-      setLikesCount(isLiked ? likesCount - 1 : likesCount + 1);
+      setHasLiked((prev) => !prev);
+      setLikesCount(hasLiked ? likesCount - 1 : likesCount + 1);
     } catch (error) {
       console.error("Failed to toggle like:", error);
       toast.error("Failed to toggle like!");
@@ -116,7 +116,7 @@ function TrackCard({ track }: { track: TrackCardProps }) {
                   aria-label={
                     isLoadingLike
                       ? "Loading likes for track"
-                      : isLiked
+                      : hasLiked
                         ? "Unlike track"
                         : "Like track"
                   }
@@ -127,14 +127,14 @@ function TrackCard({ track }: { track: TrackCardProps }) {
                   ) : (
                     <Heart
                       className={cn("size-4", {
-                        "fill-pink-500 text-pink-500": isLiked,
+                        "fill-pink-500 text-pink-500": hasLiked,
                       })}
                     />
                   )}
                 </Button>
               </TooltipTrigger>
 
-              <TooltipContent>{isLiked ? "Unlike" : "Like"}</TooltipContent>
+              <TooltipContent>{hasLiked ? "Unlike" : "Like"}</TooltipContent>
             </Tooltip>
 
             {likesCount}
