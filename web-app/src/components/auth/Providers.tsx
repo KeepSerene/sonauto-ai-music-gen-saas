@@ -14,7 +14,9 @@ export default function Providers({ children }: { children: ReactNode }) {
       authClient={authClient}
       navigate={router.push}
       replace={router.replace}
-      onSessionChange={() => {
+      redirectTo="/dashboard"
+      credentials={{ forgotPassword: false }}
+      onSessionChange={async () => {
         // Clear router cache (protected routes)
         router.refresh();
       }}

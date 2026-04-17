@@ -1,6 +1,6 @@
 "use client";
 
-import { CreditCard, LayoutDashboard, Music2 } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +19,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { authClient } from "~/server/better-auth/client";
 import {
+  APP_SIDEBAR_ITEMS,
   POLAR_PRODUCER_PACK_ID,
   POLAR_STARTER_PACK_ID,
   POLAR_STUDIO_PACK_ID,
@@ -29,19 +30,6 @@ interface AppSidebarProps {
     credits: number;
   };
 }
-
-const items = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Generate",
-    href: "/generate",
-    icon: Music2,
-  },
-];
 
 export default function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
@@ -78,7 +66,7 @@ export default function AppSidebar({ user }: AppSidebarProps) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {items.map(({ title, href, icon: Icon }) => (
+            {APP_SIDEBAR_ITEMS.map(({ title, href, icon: Icon }) => (
               <SidebarMenuItem key={title}>
                 <SidebarMenuButton
                   type="button"
@@ -113,9 +101,10 @@ export default function AppSidebar({ user }: AppSidebarProps) {
           </Button>
         </div>
 
+        {/* NOTE: The sign out button in the user button component is not working! */}
         <UserButton
           type="button"
-          variant="outline"
+          variant="ghost"
           size="default"
           additionalLinks={[
             {

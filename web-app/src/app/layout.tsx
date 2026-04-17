@@ -4,7 +4,7 @@ import { Libre_Franklin } from "next/font/google";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
-import Providers from "~/components/Providers";
+import Providers from "~/components/auth/Providers";
 
 export const metadata: Metadata = {
   title: {
@@ -28,6 +28,7 @@ export default function RootLayout({
       lang="en"
       className={cn("dark", libreFranklin.variable)}
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
       <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
         <Providers>

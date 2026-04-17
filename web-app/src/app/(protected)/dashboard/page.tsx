@@ -1,7 +1,7 @@
 import { Music4 } from "lucide-react";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import TrackCard from "~/components/dashboard/TrackCard";
+import TrackCard from "~/components/TrackCard";
 import { getSession } from "~/server/better-auth/server";
 import { db } from "~/server/db";
 

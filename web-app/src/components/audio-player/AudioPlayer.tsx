@@ -1,11 +1,12 @@
 "use client";
 
 import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
-import TrackThumbnail from "./generation-panels/TrackThumbnail";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import TrackThumbnail from "../generation/TrackThumbnail";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
 import {
   DownloadCloud,
+  FileText,
   Loader2,
   MoreHorizontal,
   Pause,
@@ -16,18 +17,19 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Slider } from "./ui/slider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Slider } from "../ui/slider";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { formatTime } from "~/lib/utils";
 import { toast } from "sonner";
-import { useSidebar } from "./ui/sidebar";
+import { useSidebar } from "../ui/sidebar";
 import { getDownloadUrl } from "~/server/actions/songs";
+import LyricsModal from "./LyricsModal";
 
 function AudioPlayer() {
   const track = useAudioPlayerStore((state) => state.track);
@@ -39,6 +41,7 @@ function AudioPlayer() {
   const [volume, setVolume] = useState([100]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isLyricsModalOpen, setIsLyricsOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
   // audioRef is always mounted (not conditional) so event listeners and effects
@@ -286,6 +289,18 @@ function AudioPlayer() {
                   </Tooltip>
 
                   <DropdownMenuContent align="end" className="w-48">
+                    {track.lyrics && (
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsLyricsOpen(true);
+                        }}
+                      >
+                        <FileText className="size-4" />
+                        View Lyrics
+                      </DropdownMenuItem>
+                    )}
+
                     <DropdownMenuItem
                       disabled={isDownloading || !track.audioUrl}
                       onClick={(e) => {
@@ -333,6 +348,13 @@ function AudioPlayer() {
           </Card>
         </div>
       )}
+
+      <LyricsModal
+        isOpen={isLyricsModalOpen}
+        onOpenChange={setIsLyricsOpen}
+        title={track?.title}
+        lyrics={track?.lyrics}
+      />
     </>
   );
 }

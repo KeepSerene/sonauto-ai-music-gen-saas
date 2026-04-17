@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
-import TrackGenPanel from "~/components/generation-panels/TrackGenPanel";
-import TracksFetcher from "~/components/generation-panels/TracksFetcher";
+import TrackGenPanel from "~/components/generation/TrackGenPanel";
+import TracksFetcher from "~/components/generation/TracksFetcher";
 
 export const metadata: Metadata = {
   title: "Generate Track",

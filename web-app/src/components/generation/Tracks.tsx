@@ -115,6 +115,7 @@ function Tracks({ tracks }: { tracks: Track[] }) {
     setTrack({
       id: track.id,
       title: track.title,
+      lyrics: track.lyrics,
       audioUrl: track.audioUrl,
       thumbnailUrl: track.thumbnailUrl,
       generatedBy: track.generatedBy,

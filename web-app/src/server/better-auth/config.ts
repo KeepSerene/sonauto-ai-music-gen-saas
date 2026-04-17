@@ -11,10 +11,12 @@ import {
 } from "@polar-sh/better-auth";
 import { env } from "~/env";
 import {
+  PASSWORD_REGEX,
   POLAR_PRODUCER_PACK_ID,
   POLAR_STARTER_PACK_ID,
   POLAR_STUDIO_PACK_ID,
 } from "~/lib/constants";
+import { createAuthMiddleware, APIError } from "better-auth/api";
 
 const polarClient = new Polar({
   accessToken: env.POLAR_ACCESS_TOKEN,
@@ -25,8 +27,30 @@ export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // Cache duration (5 minutes)
+    },
+  },
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 8,
+    maxPasswordLength: 32,
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path === "/sign-up/email") {
+        const password = ctx.body?.password as string | undefined;
+
+        if (password && !PASSWORD_REGEX.test(password)) {
+          throw new APIError("BAD_REQUEST", {
+            message:
+              "Password must be 8-32 characters and include at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+          });
+        }
+      }
+    }),
   },
   plugins: [
     polar({

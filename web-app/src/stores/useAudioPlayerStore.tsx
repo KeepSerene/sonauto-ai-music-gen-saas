@@ -6,6 +6,7 @@ interface AudioPlayerTrack {
   audioUrl: string | null;
   thumbnailUrl?: string | null;
   generatedBy: string | null;
+  lyrics?: string | null;
 }
 
 interface AudioPlayerState {

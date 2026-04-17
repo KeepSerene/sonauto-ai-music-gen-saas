@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import AppSidebar from "~/components/AppSidebar";
 import { db } from "~/server/db";
-import AudioPlayer from "~/components/AudioPlayer";
+import AudioPlayer from "~/components/audio-player/AudioPlayer";
 import AppHeader from "~/components/AppHeader";
 import { getSession } from "~/server/better-auth/server";
 import CheckoutSuccessModal from "~/components/CheckoutSuccessModal";

@@ -3,10 +3,10 @@
 import type { Category, Song } from "generated/prisma";
 import React, { useState } from "react";
 import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
-import TrackThumbnail from "../generation-panels/TrackThumbnail";
+import TrackThumbnail from "./generation/TrackThumbnail";
 import { Heart, Loader2, Pause, Play } from "lucide-react";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { cn } from "~/lib/utils";
 import { toast } from "sonner";
 import { incrementListens, toggleLike } from "~/server/actions/songs";
@@ -44,6 +44,7 @@ function TrackCard({ track }: { track: TrackCardProps }) {
     setTrack({
       id: track.id,
       title: track.title,
+      lyrics: track.lyrics,
       audioUrl: track.audioUrl,
       thumbnailUrl: track.thumbnailUrl,
       generatedBy: track.user.name,
