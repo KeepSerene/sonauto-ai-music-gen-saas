@@ -3,7 +3,7 @@
 import type { Category, Song } from "generated/prisma";
 import React, { useState } from "react";
 import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
-import TrackThumbnail from "./track-generation/TrackThumbnail";
+import TrackThumbnail from "./tracks/TrackThumbnail";
 import { Heart, Loader2, Pause, Play } from "lucide-react";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";

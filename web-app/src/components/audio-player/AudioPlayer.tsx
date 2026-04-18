@@ -1,7 +1,7 @@
 "use client";
 
 import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
-import TrackThumbnail from "../track-generation/TrackThumbnail";
+import TrackThumbnail from "../tracks/TrackThumbnail";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import {
