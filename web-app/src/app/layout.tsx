@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: "Sonauto — Sonata + Auto",
   },
   description: "AI music generation SaaS",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
 };
 
 const libreFranklin = Libre_Franklin({
@@ -28,7 +28,6 @@ export default function RootLayout({
       lang="en"
       className={cn("dark", libreFranklin.variable)}
       data-scroll-behavior="smooth"
-      suppressHydrationWarning
     >
       <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
         <Providers>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
-import TrackGenPanel from "~/components/generation/TrackGenPanel";
-import TracksFetcher from "~/components/generation/TracksFetcher";
+import TrackGenPanel from "~/components/track-generation/TrackGenPanel";
+import TracksFetcher from "~/components/track-generation/TracksFetcher";
 
 export const metadata: Metadata = {
   title: "Generate Track",
@@ -14,12 +14,15 @@ const GeneratePage = () => (
 
     <Suspense
       fallback={
-        <div className="flex size-full flex-col items-center justify-center gap-2">
-          <Loader2 aria-hidden="true" className="size-6 animate-spin" />
+        <div className="flex size-full flex-col items-center justify-center gap-4">
+          <div className="bg-muted/30 flex size-12 items-center justify-center rounded-md">
+            <Loader2
+              aria-hidden="true"
+              className="text-muted-foreground size-6 animate-spin"
+            />
+          </div>
 
-          <p className="text-muted-foreground text-lg italic">
-            Fetching tracks...
-          </p>
+          <p className="text-muted-foreground">Fetching tracks...</p>
         </div>
       }
     >

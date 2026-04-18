@@ -1,6 +1,10 @@
 "use server";
 
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { revalidatePath } from "next/cache";
 import { db } from "~/server/db";
@@ -205,4 +209,81 @@ export async function getDownloadUrl(trackId: string): Promise<string> {
   });
 
   return getSignedUrl(r2, command, { expiresIn: 60 });
+}
+
+/**
+ * Deletes a song owned by the authenticated user, cleaning up R2 files and
+ * applying the correct credit refund policy based on the song's current status.
+ */
+export async function deleteTrack(trackId: string): Promise<void> {
+  const userId = await getAuthenticatedUserId();
+
+  // ── Atomic: resolve refund logic and delete the DB record together.
+  let audioUrl: string | null = null;
+  let thumbnailUrl: string | null = null;
+
+  await db.$transaction(async (tx) => {
+    const song = await tx.song.findUnique({
+      where: { id: trackId },
+      select: {
+        userId: true,
+        audioUrl: true,
+        thumbnailUrl: true,
+        status: true,
+      },
+    });
+
+    if (!song) throw new Error("Song not found.");
+    if (song.userId !== userId) throw new Error("Unauthorized.");
+
+    audioUrl = song.audioUrl;
+    thumbnailUrl = song.thumbnailUrl;
+
+    // Smart refund rules:
+    // "queued"     → refunds 2 credits (canceled before GPU touched it)
+    // "generating" → no refund (GPU is actively running; user forfeits credits)
+    // "failed"     → no refund (already refunded — either by the Inngest
+    //                onFailure hook or by TracksFetcher stale remediation)
+    // "completed"  → no refund (user received their track)
+    if (song.status === "queued") {
+      await tx.user.update({
+        where: { id: userId },
+        data: { credits: { increment: 2 } },
+      });
+    }
+
+    await tx.song.delete({ where: { id: trackId } });
+  });
+
+  // ── R2 cleanup: best-effort, never blocks the DB deletion ────────────
+  const deletePromises: Promise<unknown>[] = [];
+
+  if (audioUrl) {
+    const key = new URL(audioUrl).pathname.replace(/^\//, "");
+    deletePromises.push(
+      r2.send(
+        new DeleteObjectCommand({ Bucket: env.R2_BUCKET_NAME, Key: key }),
+      ),
+    );
+  }
+
+  if (thumbnailUrl) {
+    const key = new URL(thumbnailUrl).pathname.replace(/^\//, "");
+    deletePromises.push(
+      r2.send(
+        new DeleteObjectCommand({ Bucket: env.R2_BUCKET_NAME, Key: key }),
+      ),
+    );
+  }
+
+  if (deletePromises.length > 0) {
+    const results = await Promise.allSettled(deletePromises);
+    results.forEach((result) => {
+      if (result.status === "rejected") {
+        console.error("R2 cleanup failed (non-fatal):", result.reason);
+      }
+    });
+  }
+
+  revalidatePath("/generate");
 }

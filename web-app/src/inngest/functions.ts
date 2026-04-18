@@ -40,10 +40,7 @@ export const generateSong = inngest.createFunction(
     triggers: { event: "song/generate" },
     retries: 2,
     onFailure: async ({ event, step }) => {
-      // In an onFailure hook, the original event is nested under `event.data.event`
-      const { songId } = event.data.event.data as SongGenerateEventData;
-
-      // The error object that exhausted the retries is under `event.data.error`
+      const { songId, userId } = event.data.event.data as SongGenerateEventData;
       const error = event.data.error;
       const errorMessage =
         typeof error === "string"
@@ -51,21 +48,37 @@ export const generateSong = inngest.createFunction(
           : ((error as { message?: string })?.message ??
             "Generation failed after multiple retries.");
 
-      await step.run("mark-failed", async () => {
-        await db.song.update({
+      await step.run("mark-failed-and-refund", async () => {
+        // The user may have already deleted this track while it was in-flight.
+        // If so, skip — the deleteTrack action already handled the correct
+        // refund (or intentional non-refund for "generating" cancellations).
+        const song = await db.song.findUnique({
           where: { id: songId },
-          data: {
-            status: "failed",
-            errorMessage: errorMessage.slice(0, 500),
-          },
+          select: { id: true },
         });
+
+        if (!song) return;
+
+        // Song still exists — mark it failed and refund the upfront charge.
+        await db.$transaction([
+          db.song.update({
+            where: { id: songId },
+            data: {
+              status: "failed",
+              errorMessage: errorMessage.slice(0, 500),
+            },
+          }),
+          db.user.update({
+            where: { id: userId },
+            data: { credits: { increment: 2 } },
+          }),
+        ]);
       });
     },
   },
   async ({ event, step }) => {
     const {
       songId,
-      userId,
       mode,
       description,
       lyrics,
@@ -187,12 +200,6 @@ export const generateSong = inngest.createFunction(
           thumbnailUrl: modalResult.thumbnail_url,
           status: "completed",
         },
-      });
-
-      // Deduct 2 credit from the user's balance
-      await db.user.update({
-        where: { id: userId },
-        data: { credits: { decrement: 2 } },
       });
     });
 

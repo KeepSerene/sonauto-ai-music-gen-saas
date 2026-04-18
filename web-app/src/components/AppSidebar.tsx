@@ -24,6 +24,7 @@ import {
   POLAR_STARTER_PACK_ID,
   POLAR_STUDIO_PACK_ID,
 } from "~/lib/constants";
+import Logo from "./Logo";
 
 interface AppSidebarProps {
   user: {
@@ -55,9 +56,9 @@ export default function AppSidebar({ user }: AppSidebarProps) {
       <SidebarHeader>
         <Link
           href="/"
-          className="text-primary hover:text-primary/90 focus-visible:text-primary/90 w-fit text-2xl font-semibold tracking-wide uppercase transition-colors duration-150"
+          className="text-primary hover:text-primary/90 focus-visible:text-primary/90 w-fit transition-colors duration-150"
         >
-          Sonauto
+          <Logo />
         </Link>
       </SidebarHeader>
 

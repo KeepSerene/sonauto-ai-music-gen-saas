@@ -51,23 +51,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Credits check — fetch the user's current balance
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { credits: true },
-  });
-
-  if (!user || user.credits <= 0) {
-    return NextResponse.json(
-      {
-        error:
-          "You have no credits remaining. Upgrade your plan to generate more songs.",
-      },
-      { status: 403 },
-    );
-  }
-
-  // 3. Validate request body
+  // 2. Validate request body first
   const parsed = generateSchema.safeParse(await req.json());
 
   if (!parsed.success) {
@@ -79,40 +63,55 @@ export async function POST(req: NextRequest) {
 
   const body = parsed.data;
 
-  // 4. Create the Song record immediately so the frontend gets a songId
-  //    to poll. Status starts as "queued" — Inngest will update it.
+  // 3. Atomic credit deduction.
+  const deducted = await db.user.updateMany({
+    where: { id: session.user.id, credits: { gte: 2 } },
+    data: { credits: { decrement: 2 } },
+  });
+
+  if (deducted.count === 0) {
+    return NextResponse.json(
+      {
+        error:
+          "You have no credits remaining. Upgrade your plan to generate more songs.",
+      },
+      { status: 402 },
+    );
+  }
+
+  // 4. Create the Song record immediately.
+  // Status starts as "queued" — Inngest will update it.
   const song = await db.song.create({
     data: {
-      // Temporary title — Inngest will overwrite with an AI-generated one
       title: body.description.slice(0, 60),
       userId: session.user.id,
       mode: body.mode,
       isInstrumental: body.isInstrumental,
       audioDuration: body.audioDuration,
-      // For custom-manual, store the user's lyrics immediately so they
-      // are visible in the UI even before generation completes.
       lyrics: body.mode === "custom-manual" ? body.lyrics : null,
       status: "queued",
     },
   });
 
   // 5. Fire the Inngest event — do NOT await the generation itself
-  await inngest.send({
-    name: "song/generate",
-    data: {
-      songId: song.id,
-      userId: session.user.id,
-      mode: body.mode,
-      description: body.description,
-      lyrics: body.mode === "custom-manual" ? body.lyrics : undefined,
-      isInstrumental: body.isInstrumental,
-      audioDuration: body.audioDuration,
-      seed: body.seed,
-    },
-  });
+  try {
+    await inngest.send({
+      name: "song/generate",
+      data: {
+        songId: song.id,
+        userId: session.user.id,
+        mode: body.mode,
+        description: body.description,
+        lyrics: body.mode === "custom-manual" ? body.lyrics : undefined,
+        isInstrumental: body.isInstrumental,
+        audioDuration: body.audioDuration,
+        seed: body.seed,
+      },
+    });
+  } catch (err) {
+    console.error("[generate] inngest.send failed — job will not run:", err);
+  }
 
-  // 6. Return the new song ID. The UI currently uses router.refresh() to pick up
-  // the queued song, but songId is available here for future use (e.g. toasts,
-  // deep-links, optimistic UI).
+  // 6. Return the new song ID.
   return NextResponse.json({ songId: song.id }, { status: 202 });
 }

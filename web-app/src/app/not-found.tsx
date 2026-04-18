@@ -4,21 +4,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FileSearch } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import Logo from "~/components/Logo";
 
 // Catches all 404s globally
 export default function NotFoundPage() {
   const router = useRouter();
 
   return (
-    <div className="bg-background flex min-h-dvh flex-col items-center justify-center px-6">
-      {/* Logo Placeholder */}
+    <main
+      className="bg-background flex min-h-dvh flex-col items-center justify-center px-6"
+      suppressHydrationWarning
+    >
       <div className="absolute top-6 left-7">
         <Link
           href="/"
+          replace
           aria-label="Back to home"
-          className="text-primary hover:text-primary/90 focus-visible:text-primary/90 w-fit text-2xl font-semibold tracking-wide uppercase transition-colors duration-150 focus-visible:outline-none"
+          className="text-primary hover:text-primary/90 focus-visible:text-primary/90 w-fit transition-colors duration-150"
         >
-          Sonauto
+          <Logo />
         </Link>
       </div>
 
@@ -75,6 +79,6 @@ export default function NotFoundPage() {
           </Button>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

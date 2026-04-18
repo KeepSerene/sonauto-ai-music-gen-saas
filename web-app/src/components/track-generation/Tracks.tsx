@@ -10,6 +10,8 @@ import {
   RefreshCw,
   Rows4,
   Search,
+  Trash2,
+  X,
   XCircle,
 } from "lucide-react";
 import { Input } from "../ui/input";
@@ -25,6 +27,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { toast } from "sonner";
@@ -38,6 +41,7 @@ import {
   getDownloadUrl,
 } from "~/server/actions/songs";
 import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
+import DeleteTrackDialog from "./DeleteTrackDialog";
 
 export interface Track {
   id: string;
@@ -54,19 +58,34 @@ export interface Track {
   errorMessage: string | null;
 }
 
-function Tracks({ tracks }: { tracks: Track[] }) {
+interface TracksProps {
+  tracks: Track[];
+  hasJustRefunded?: boolean;
+}
+
+const SLOW_THRESHOLD_MS = 5 * 60 * 1000; // 5 min — warn user, server cleans up at 15
+
+function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [trackToRename, setTrackToRename] = useState<Track | null>(null);
   const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
+  const [trackToDelete, setTrackToDelete] = useState<Track | null>(null);
 
   const activeTrack = useAudioPlayerStore((state) => state.track);
   const setTrack = useAudioPlayerStore((state) => state.setTrack);
   const isPlaying = useAudioPlayerStore((state) => state.isPlaying);
   const setIsPlaying = useAudioPlayerStore((state) => state.setIsPlaying);
   const setIsDismissed = useAudioPlayerStore((state) => state.setIsDismissed);
+
+  // ── Sync layout (AppSidebar) if server mutated credits ────────────────────────────────
+  useEffect(() => {
+    if (hasJustRefunded) {
+      router.refresh();
+    }
+  }, [hasJustRefunded, router]);
 
   // ── Auto-poll while any track is pending ─────────────────────────────────
   // Calls router.refresh() every 5s, which re-runs TracksFetcher on the
@@ -233,11 +252,31 @@ function Tracks({ tracks }: { tracks: Track[] }) {
                           Please try generating the song again.
                         </p>
                       </div>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Delete track"
+                            onClick={() => setTrackToDelete(track)}
+                            className="text-muted-foreground hover:text-destructive focus-visible:text-destructive shrink-0"
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>Delete track</TooltipContent>
+                      </Tooltip>
                     </li>
                   );
 
                 // ── Queued ──────────────────────────────────────────────────
-                case "queued":
+                case "queued": {
+                  const isSlowQueued =
+                    Date.now() - track.createdAt.getTime() > SLOW_THRESHOLD_MS;
+
                   return (
                     <li
                       key={track.id}
@@ -252,15 +291,45 @@ function Tracks({ tracks }: { tracks: Track[] }) {
                           Waiting in line...
                         </p>
 
-                        <p className="text-muted-foreground/70 truncate text-xs">
-                          Updating automatically — hang tight.
+                        <p
+                          className={cn(
+                            "truncate text-xs",
+                            isSlowQueued
+                              ? "text-yellow-500"
+                              : "text-muted-foreground/70",
+                          )}
+                        >
+                          {isSlowQueued
+                            ? "Taking longer than expected — still waiting."
+                            : "Updating automatically — hang tight."}
                         </p>
                       </div>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Cancel generation"
+                            onClick={() => setTrackToDelete(track)}
+                            className="text-muted-foreground hover:text-destructive focus-visible:text-destructive shrink-0"
+                          >
+                            <X className="size-4" />
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>Cancel generation</TooltipContent>
+                      </Tooltip>
                     </li>
                   );
+                }
 
                 // ── Generating ──────────────────────────────────────────────
-                case "generating":
+                case "generating": {
+                  const isSlowGenerating =
+                    Date.now() - track.createdAt.getTime() > SLOW_THRESHOLD_MS;
+
                   return (
                     <li
                       key={track.id}
@@ -275,12 +344,39 @@ function Tracks({ tracks }: { tracks: Track[] }) {
                           Generating your song...
                         </p>
 
-                        <p className="text-muted-foreground/70 truncate text-xs">
-                          Updating automatically — this can take a minute.
+                        <p
+                          className={cn(
+                            "truncate text-xs",
+                            isSlowGenerating
+                              ? "text-yellow-500"
+                              : "text-muted-foreground/70",
+                          )}
+                        >
+                          {isSlowGenerating
+                            ? "Taking longer than expected — still working on it."
+                            : "Updating automatically — this can take a minute."}
                         </p>
                       </div>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Cancel generation"
+                            onClick={() => setTrackToDelete(track)}
+                            className="text-muted-foreground hover:text-destructive focus-visible:text-destructive shrink-0"
+                          >
+                            <X className="size-4" />
+                          </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>Cancel generation</TooltipContent>
+                      </Tooltip>
                     </li>
                   );
+                }
 
                 // ── Completed ────────────────────────────────────────────────
                 default:
@@ -417,6 +513,20 @@ function Tracks({ tracks }: { tracks: Track[] }) {
                                 <Edit3 className="size-4" />
                                 Rename
                               </DropdownMenuItem>
+
+                              <DropdownMenuSeparator />
+
+                              <DropdownMenuItem
+                                onClick={(e) => e.stopPropagation()}
+                                onSelect={(e) => {
+                                  e.preventDefault();
+                                  setTrackToDelete(track);
+                                }}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="size-4" />
+                                Delete
+                              </DropdownMenuItem>
                             </DropdownMenuGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -429,12 +539,18 @@ function Tracks({ tracks }: { tracks: Track[] }) {
         </ul>
       </div>
 
-      {/* ── Rename Dialog ─────────────────────────────────────────────────── */}
       {trackToRename && (
         <RenameDialog
           track={trackToRename}
           onRename={handleRename}
           onClose={() => setTrackToRename(null)}
+        />
+      )}
+
+      {trackToDelete && (
+        <DeleteTrackDialog
+          track={trackToDelete}
+          onClose={() => setTrackToDelete(null)}
         />
       )}
     </div>

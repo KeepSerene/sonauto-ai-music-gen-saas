@@ -1,0 +1,61 @@
+<svg
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+>
+  <!--
+    Sonauto favicon — DAW automation lane
+    Sonata (the S-wave) + Auto (the keyframe nodes)
+
+    Bezier path: M 5,32 C 11,4 27,4 32,32 C 37,60 53,60 59,32
+    Node positions are exact bezier evaluations at t=0, t=0.5, t=1.0
+    per segment — they sit precisely on the curve, not approximately near it.
+
+    Segment 1 peak  @ t=0.5:
+      x = 0.125×5  + 0.375×11 + 0.375×27 + 0.125×32 = 18.875 ≈ 19
+      y = 0.125×32 + 0.375×4  + 0.375×4  + 0.125×32 = 11
+
+    Segment 2 trough @ t=0.5:
+      x = 0.125×32 + 0.375×37 + 0.375×53 + 0.125×59 = 45.125 ≈ 45
+      y = 0.125×32 + 0.375×60 + 0.375×60 + 0.125×32 = 53
+  -->
+
+  <!-- Automation lane baseline — the horizontal track the curve rides on -->
+  <line
+    x1="2"
+    y1="32"
+    x2="62"
+    y2="32"
+    stroke="#6366F1"
+    stroke-width="1"
+    stroke-linecap="round"
+    opacity="0.28"
+  />
+
+  <!-- The wave — one continuous S-curve: Sonata + Auto in a single stroke -->
+  <path
+    d="M 5,32 C 11,4 27,4 32,32 C 37,60 53,60 59,32"
+    stroke="#6366F1"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+
+  <!-- Automation keyframe nodes — sitting exactly on the bezier curve -->
+  
+  <!-- Node 1: start (5, 32) -->
+  <circle cx="5" cy="32" r="3.5" fill="#6366F1" />
+
+  <!-- Node 2: peak (18.875 ≈ 19, 11) -->
+  <circle cx="19" cy="11" r="3.5" fill="#6366F1" />
+
+  <!-- Node 3: center crossing (32, 32) -->
+  <circle cx="32" cy="32" r="3.5" fill="#6366F1" />
+
+  <!-- Node 4: trough (45.125 ≈ 45, 53) -->
+  <circle cx="45" cy="53" r="3.5" fill="#6366F1" />
+
+  <!-- Node 5: end (59, 32) -->
+  <circle cx="59" cy="32" r="3.5" fill="#6366F1" />
+</svg>
