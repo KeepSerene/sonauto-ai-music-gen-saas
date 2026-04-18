@@ -25,35 +25,33 @@ function getDialogCopy(status: Track["status"]) {
   switch (status) {
     case "queued":
       return {
-        title: "Cancel this generation?",
-        description:
-          "This track is waiting in the queue. Canceling will remove it and refund your 2 credits.",
+        title: "Cancel request?",
+        description: "This is waiting in line. You will be refunded 2 credits.",
         warning: null,
-        confirmLabel: "Cancel Generation",
+        confirmLabel: "Confirm",
       };
     case "generating":
       return {
-        title: "Cancel this generation?",
-        description:
-          "This track is currently being generated. The job is already running on the GPU.",
-        warning:
-          "Your 2 credits will NOT be refunded — GPU time is already being consumed.",
-        confirmLabel: "Cancel Anyway",
+        title: "Halt processing?",
+        description: "This job is already actively running on the GPU.",
+        warning: "Your 2 credits will not be refunded.",
+        confirmLabel: "Stop",
       };
     case "failed":
       return {
-        title: "Delete failed track?",
+        title: "Clear failed track?",
         description:
-          "This track failed to generate. Deleting it will remove it from your list. Your credits were already refunded when it failed.",
+          "Clean up this unsuccessful attempt. Credits were already refunded.",
         warning: null,
-        confirmLabel: "Delete Track",
+        confirmLabel: "Discard",
       };
+    // Completed
     default:
       return {
         title: "Delete this track?",
-        description: `This will permanently delete "${undefined}" and remove the audio and thumbnail from our servers. This action cannot be undone.`,
+        description: "",
         warning: null,
-        confirmLabel: "Delete Track",
+        confirmLabel: "Erase",
       };
   }
 }
@@ -67,7 +65,7 @@ export default function DeleteTrackDialog({
   const copy = getDialogCopy(track.status);
   const description =
     track.status === "completed"
-      ? `This will permanently delete "${track.title || "this track"}" and remove the audio and thumbnail from our servers. This action cannot be undone.`
+      ? `"${track.title || "This track"}" will be permanently removed. This action cannot be undone.`
       : copy.description;
 
   const handleDelete = async (event: React.MouseEvent) => {

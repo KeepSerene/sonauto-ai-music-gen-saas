@@ -240,11 +240,11 @@ export async function deleteTrack(trackId: string): Promise<void> {
     thumbnailUrl = song.thumbnailUrl;
 
     // Smart refund rules:
-    // "queued"     → refunds 2 credits (canceled before GPU touched it)
-    // "generating" → no refund (GPU is actively running; user forfeits credits)
-    // "failed"     → no refund (already refunded — either by the Inngest
+    // "queued"     -> refunds 2 credits (canceled before GPU touched it)
+    // "generating" -> no refund (GPU is actively running; user forfeits credits)
+    // "failed"     -> no refund (already refunded — either by the Inngest
     //                onFailure hook or by TracksFetcher stale remediation)
-    // "completed"  → no refund (user received their track)
+    // "completed"  -> no refund (user received their track)
     if (song.status === "queued") {
       await tx.user.update({
         where: { id: userId },

@@ -8,12 +8,13 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+import ThemeToggle from "./theme/ThemeToggle";
 
 function AppHeader() {
   const { open } = useSidebar();
 
   return (
-    <header className="bg-background sticky top-0 left-0 z-10 flex shrink-0 items-center border-b px-4 py-2">
+    <header className="bg-background sticky top-0 left-0 z-10 flex shrink-0 items-center justify-between gap-4 border-b px-4 py-2">
       <div className="flex shrink-0 grow items-center gap-2">
         <Tooltip>
           <TooltipTrigger type="button" asChild>
@@ -33,6 +34,8 @@ function AppHeader() {
 
         <AppBreadcrumbs />
       </div>
+
+      <ThemeToggle />
     </header>
   );
 }

@@ -3,8 +3,8 @@ import { type Metadata } from "next";
 import { Libre_Franklin } from "next/font/google";
 import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { cn } from "~/lib/utils";
 import Providers from "~/components/auth/Providers";
+import ThemeProvider from "~/components/theme/ThemeProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -26,15 +26,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("dark", libreFranklin.variable)}
+      className={libreFranklin.variable}
       data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
       <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
-        <Providers>
-          <TooltipProvider>{children}</TooltipProvider>
-        </Providers>
+        <ThemeProvider
+          attribute="class"
+          enableSystem
+          enableColorScheme
+          defaultTheme="system"
+        >
+          <Providers>
+            <TooltipProvider>{children}</TooltipProvider>
+          </Providers>
 
-        <Toaster position="top-right" richColors />
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

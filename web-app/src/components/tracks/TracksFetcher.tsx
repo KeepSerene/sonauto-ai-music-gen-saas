@@ -8,7 +8,7 @@ import { getSession } from "~/server/better-auth/server";
 // A song stuck in "queued" for this long means Inngest never picked it up.
 // A song stuck in "generating" means Modal timed out but Inngest didn't
 // surface the failure (e.g. Inngest itself was down). Modal's own timeout
-// is 600s, so 15 min is a safe ceiling for the full queued → generating arc.
+// is 600s, so 15 min is a safe ceiling for the full queued -> generating arc.
 const STALE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 
 async function TracksFetcher() {
@@ -61,7 +61,6 @@ async function TracksFetcher() {
       s.status = "failed";
       s.errorMessage = "Generation timed out. Your credits have been refunded.";
     });
-
     hasJustRefunded = true;
   }
   // ───────────────────────────────────────────────────────────────────────
