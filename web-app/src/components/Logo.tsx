@@ -10,17 +10,19 @@ export const SonautoIcon = ({ size = 32 }: { size?: number }) => (
     fill="none"
     aria-label="Sonauto logo mark"
   >
+    {/* Automation lane baseline — the horizontal track the curve rides on */}
     <line
       x1="2"
       y1="32"
       x2="62"
       y2="32"
       stroke="currentColor"
-      strokeWidth="1"
+      strokeWidth="2"
       strokeLinecap="round"
-      opacity="0.25"
+      opacity="0.45"
     />
 
+    {/* The wave — one continuous S-curve: Sonata + Auto in a single stroke */}
     <path
       d="M 5,32 C 11,4 27,4 32,32 C 37,60 53,60 59,32"
       stroke="currentColor"

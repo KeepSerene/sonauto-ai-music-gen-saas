@@ -28,16 +28,16 @@
     y1="32"
     x2="62"
     y2="32"
-    stroke="#6366F1"
-    stroke-width="1"
+    stroke="oklch(0.53 0.155 299)"
+    stroke-width="2"
     stroke-linecap="round"
-    opacity="0.28"
+    opacity="0.48"
   />
 
   <!-- The wave — one continuous S-curve: Sonata + Auto in a single stroke -->
   <path
     d="M 5,32 C 11,4 27,4 32,32 C 37,60 53,60 59,32"
-    stroke="#6366F1"
+    stroke="oklch(0.53 0.155 299)"
     stroke-width="3"
     stroke-linecap="round"
   />
@@ -45,17 +45,17 @@
   <!-- Automation keyframe nodes — sitting exactly on the bezier curve -->
   
   <!-- Node 1: start (5, 32) -->
-  <circle cx="5" cy="32" r="3.5" fill="#6366F1" />
+  <circle cx="5" cy="32" r="3.5" fill="oklch(0.53 0.155 299)" />
 
   <!-- Node 2: peak (18.875 ≈ 19, 11) -->
-  <circle cx="19" cy="11" r="3.5" fill="#6366F1" />
+  <circle cx="19" cy="11" r="3.5" fill="oklch(0.53 0.155 299)" />
 
   <!-- Node 3: center crossing (32, 32) -->
-  <circle cx="32" cy="32" r="3.5" fill="#6366F1" />
+  <circle cx="32" cy="32" r="3.5" fill="oklch(0.53 0.155 299)" />
 
   <!-- Node 4: trough (45.125 ≈ 45, 53) -->
-  <circle cx="45" cy="53" r="3.5" fill="#6366F1" />
+  <circle cx="45" cy="53" r="3.5" fill="oklch(0.53 0.155 299)" />
 
   <!-- Node 5: end (59, 32) -->
-  <circle cx="59" cy="32" r="3.5" fill="#6366F1" />
+  <circle cx="59" cy="32" r="3.5" fill="oklch(0.53 0.155 299)" />
 </svg>

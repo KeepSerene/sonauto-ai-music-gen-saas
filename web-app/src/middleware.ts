@@ -18,13 +18,14 @@ export default async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const isAuthenticated = !!sessionCookie;
 
-  if (isProtectedRoute && !isAuthenticated) {
+  // 1. Block unauthenticated users from protected routes AND the sign-out route
+  if ((isProtectedRoute || isSignOutRoute) && !isAuthenticated) {
     const signInUrl = new URL("/auth/sign-in", request.nextUrl.origin);
 
     return NextResponse.redirect(signInUrl);
   }
 
-  // If it's an auth route except for the sign-out route -> bounce to dashboard
+  // 2. If it's an auth route (except for sign-out) -> bounce authenticated users to dashboard
   if (isAuthRoute && !isSignOutRoute && isAuthenticated) {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
   }

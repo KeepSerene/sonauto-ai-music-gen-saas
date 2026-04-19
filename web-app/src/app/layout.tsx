@@ -5,45 +5,120 @@ import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import Providers from "~/components/auth/Providers";
 import ThemeProvider from "~/components/theme/ThemeProvider";
+import { env } from "~/env";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// METADATA
+// ─────────────────────────────────────────────────────────────────────────────
+
+const APP_URL = env.NEXT_PUBLIC_APP_URL;
+const APP_TITLE = "Sonauto — Sonata, Automated";
+const APP_DESCRIPTION =
+  "Turn any idea into a full song — AI-written lyrics, original melody, and unique artwork — in minutes. Describe your vision and let Sonauto compose the rest.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_URL),
   title: {
     template: "%s | Sonauto",
-    default: "Sonauto — Sonata + Auto",
+    default: APP_TITLE,
   },
-  description: "AI music generation SaaS",
+  description: APP_DESCRIPTION,
+  keywords: [
+    "AI music generation",
+    "AI song maker",
+    "text to music",
+    "AI lyrics generator",
+    "music AI",
+    "song generator",
+    "AI composer",
+    "AI music",
+    "generate music from text",
+    "AI audio generation",
+    "music creation tool",
+    "lyric writer AI",
+  ],
+  // TODO: Replace with the solo developer's actual name and portfolio URL
+  authors: [{ name: "Your Name", url: "https://your-portfolio.com" }],
+  creator: "Your Name",
+  publisher: "Sonauto",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: APP_URL,
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    siteName: "Sonauto",
+    // TODO: Add an og-image.png (1200×630) to the /public directory
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Sonauto — AI Music Generation. Sonata, Automated.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    // TODO: Replace with your actual Twitter/X handle
+    creator: "@your_twitter_handle",
+    site: "@sonauto",
+    images: ["/og-image.png"],
+  },
   icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
+  alternates: {
+    canonical: APP_URL,
+  },
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FONT
+// ─────────────────────────────────────────────────────────────────────────────
 
 const libreFranklin = Libre_Franklin({
   subsets: ["latin"],
   variable: "--font-libre-franklin",
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html
-      lang="en"
-      className={libreFranklin.variable}
-      data-scroll-behavior="smooth"
-      suppressHydrationWarning
-    >
-      <body className="selection:bg-primary/20 min-h-dvh selection:text-white">
-        <ThemeProvider
-          attribute="class"
-          enableSystem
-          enableColorScheme
-          defaultTheme="system"
-        >
-          <Providers>
-            <TooltipProvider>{children}</TooltipProvider>
-          </Providers>
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYOUT
+// ─────────────────────────────────────────────────────────────────────────────
 
-          <Toaster position="top-right" richColors />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
+  <html
+    lang="en"
+    className={libreFranklin.variable}
+    data-scroll-behavior="smooth"
+    suppressHydrationWarning
+  >
+    <body className="selection:bg-primary selection:text-primary-foreground min-h-dvh">
+      <ThemeProvider
+        attribute="class"
+        enableSystem
+        enableColorScheme
+        defaultTheme="system"
+      >
+        <Providers>
+          <TooltipProvider>{children}</TooltipProvider>
+        </Providers>
+
+        <Toaster position="top-right" richColors />
+      </ThemeProvider>
+    </body>
+  </html>
+);
+
+export default RootLayout;
