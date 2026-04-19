@@ -22,8 +22,13 @@ function TrackThumbnail({ src, alt, className }: TrackThumbnailProps) {
         </div>
       ) : (
         <>
-          {/* Shimmer skeleton shown until the image fires onLoad */}
-          {!loaded && <div className="skeleton absolute inset-0" />}
+          <div
+            className={cn(
+              "skeleton absolute inset-0 transition-opacity duration-300",
+              loaded ? "pointer-events-none opacity-0" : "opacity-100",
+            )}
+            aria-hidden="true"
+          />
 
           <Image
             src={src}
@@ -34,7 +39,7 @@ function TrackThumbnail({ src, alt, className }: TrackThumbnailProps) {
             onLoad={() => setLoaded(true)}
             className={cn(
               "size-full object-cover transition-opacity duration-300",
-              !loaded && "opacity-0",
+              loaded ? "opacity-100" : "opacity-0",
             )}
           />
         </>

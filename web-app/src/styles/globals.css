@@ -79,12 +79,12 @@
   --secondary-foreground: oklch(0.365 0.033 287);
   --muted: oklch(0.8906 0.0139 299.7754);
   --muted-foreground: oklch(0.5288 0.0375 290.7895);
-  --accent: oklch(0.73 0.13 359);
+  --accent: oklch(0.86 0.05 359);
   --accent-foreground: oklch(0.33 0.048 1.5);
   --destructive: oklch(0.6332 0.1578 22.6734);
   --destructive-foreground: oklch(0.9777 0.0041 301.4256);
   --border: oklch(0.8447 0.0226 300.1421);
-  --input: oklch(0.9329 0.0124 301.2783);
+  --input: oklch(0.85 0.02 300);
   --ring: oklch(0.53 0.155 299);
   --chart-1: oklch(0.53 0.155 299);
   --chart-2: oklch(0.73 0.13 359);
@@ -95,7 +95,7 @@
   --sidebar-foreground: oklch(0.3651 0.0325 287.0807);
   --sidebar-primary: oklch(0.53 0.155 299);
   --sidebar-primary-foreground: oklch(0.977 0.004 301);
-  --sidebar-accent: oklch(0.73 0.13 359);
+  --sidebar-accent: oklch(0.86 0.05 359);
   --sidebar-accent-foreground: oklch(0.33 0.048 1.5);
   --sidebar-ring: oklch(0.53 0.155 299);
 
@@ -243,13 +243,36 @@
     appearance: none;
   }
 
-  /* Skeleton shimmer */
+  /* ─── Skeleton shimmer ─────────────────────────────────────────────────── */
   @keyframes skeleton-shimmer {
     0% {
       background-position: 200% 0;
     }
     100% {
       background-position: -200% 0;
+    }
+  }
+
+  .skeleton {
+    background-color: var(--muted);
+    background-image: linear-gradient(
+      105deg,
+      transparent 40%,
+      color-mix(in oklch, var(--muted-foreground) 12%, transparent) 50%,
+      transparent 60%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* ─── Audio Equalizer Animation ────────────────────────────────────────── */
+  @keyframes audio-play {
+    0%,
+    100% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
     }
   }
 }

@@ -18,6 +18,7 @@ import { Switch } from "../ui/switch";
 import { formatTime } from "~/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { cn } from "~/lib/utils";
 
 type GenerationMode = "simple" | "custom";
 type CustomMode = "auto" | "manual";
@@ -36,6 +37,9 @@ const inspirations = [
   "Acoustic ballad",
   "Epic movie score",
   "Lo-fi hip-hop",
+  "Ghazal lo-fi",
+  "Sufi rock anthem",
+  "Bollywood romantic",
   "Driving rock anthem",
   "Summer beach vibe",
 ];
@@ -44,6 +48,10 @@ const musicStyles = [
   "Industrial rave",
   "Heavy bass",
   "Orchestral",
+  "Desi hip-hop",
+  "Sitar ambient",
+  "Tabla beats",
+  "Qawwali vocals",
   "Electronic beats",
   "Funky guitar",
   "Soulful vocals",
@@ -185,12 +193,13 @@ function TrackGenPanel() {
     }
   };
 
-  // Audio duration slider TSX
+  // ── Shared sub-components ────────────────────────────────────────────────
+
   const durationSlider = (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium">Duration</label>
-        <span className="text-muted-foreground text-sm tabular-nums">
+        <span className="text-muted-foreground bg-muted rounded px-1.5 py-0.5 text-xs tabular-nums">
           {formatTime(audioDuration)}
         </span>
       </div>
@@ -205,7 +214,6 @@ function TrackGenPanel() {
     </div>
   );
 
-  // Advanced options (Variation Key / seed) TSX
   const advancedOptions = (idSuffix: string) => (
     <div className="flex flex-col gap-2">
       <Button
@@ -213,7 +221,7 @@ function TrackGenPanel() {
         variant="ghost"
         size="sm"
         onClick={() => setShowAdvanced((prev) => !prev)}
-        className="text-xs"
+        className="text-muted-foreground hover:text-foreground w-fit text-xs"
       >
         <Settings2 className="size-3" />
         Advanced options
@@ -225,36 +233,62 @@ function TrackGenPanel() {
       </Button>
 
       {showAdvanced && (
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={`variation-key-${idSuffix}`}
-            className="text-sm font-medium"
-          >
-            Variation Key
-          </label>
+        <div className="bg-muted/40 border-border flex flex-col gap-3 rounded-lg border p-3">
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor={`variation-key-${idSuffix}`}
+              className="text-sm font-medium"
+            >
+              Variation Key
+            </label>
 
-          <p className="text-muted-foreground text-xs">
-            Enter any number to reproduce the exact same result. Leave blank for
-            a random generation.
-          </p>
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              Enter any number to reproduce the exact same result. Leave blank
+              for a random generation.
+            </p>
 
-          <Input
-            id={`variation-key-${idSuffix}`}
-            type="number"
-            value={seed}
-            onChange={(e) =>
-              setSeed(e.target.value === "" ? "" : parseInt(e.target.value, 10))
-            }
-            step={1}
-            placeholder="e.g. 42"
-          />
+            <Input
+              id={`variation-key-${idSuffix}`}
+              type="number"
+              value={seed}
+              onChange={(e) =>
+                setSeed(
+                  e.target.value === "" ? "" : parseInt(e.target.value, 10),
+                )
+              }
+              step={1}
+              placeholder="e.g. 42"
+            />
+          </div>
         </div>
       )}
     </div>
   );
 
+  // ── Chip row helper ──────────────────────────────────────────────────────
+  const chipRow = (items: string[], onClick: (item: string) => void) => (
+    <div className="w-full overflow-x-auto whitespace-nowrap">
+      <div className="flex gap-1.5 pb-2">
+        {items.map((item) => (
+          <Button
+            key={item}
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onClick(item)}
+            className="text-muted-foreground hover:text-foreground border-border/70 h-7 shrink-0 rounded-full px-2.5 text-xs"
+          >
+            <Plus className="size-3" />
+            {item}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="bg-muted/30 flex w-full flex-col lg:h-full lg:w-80 lg:border-r">
+    <div className="bg-muted/20 flex w-full flex-col lg:h-full lg:w-80 lg:border-r">
+      {/* ── Scrollable form area ──────────────────────────────────────────── */}
       <div className="overflow-y-auto p-4 lg:flex-1">
         <Tabs
           defaultValue="simple"
@@ -274,16 +308,16 @@ function TrackGenPanel() {
 
           {/* ─── Simple mode ─────────────────────────────────────────────── */}
           <TabsContent value="simple" className="mt-6 space-y-6">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <label htmlFor="vibe" className="text-sm font-medium">
-                Describe the vibe of your song
+                Describe the vibe
               </label>
 
               <Textarea
                 id="vibe"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="placeholder:text-muted-foreground/70 min-h-30 resize-none"
+                className="placeholder:text-muted-foreground/60 min-h-28 resize-none text-sm"
                 placeholder="A dreamy lo-fi hip-hop song, perfect for studying or relaxing..."
               />
             </div>
@@ -294,16 +328,16 @@ function TrackGenPanel() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setMode("custom")}
-                className="text-sm"
+                className="text-muted-foreground hover:text-foreground text-xs"
               >
-                <Plus className="size-4" />
-                Lyrics
+                <Plus className="size-3.5" />
+                Add lyrics
               </Button>
 
               <div className="flex items-center gap-2">
                 <label
                   htmlFor="instrumental-simple"
-                  className="text-sm font-medium"
+                  className="text-muted-foreground text-xs font-medium"
                 >
                   Instrumental
                 </label>
@@ -316,56 +350,38 @@ function TrackGenPanel() {
               </div>
             </div>
 
-            {/* Inspiration chips */}
-            <div className="flex flex-col gap-3">
-              <p className="text-sm font-medium">Inspirations</p>
+            <div className="flex flex-col gap-2">
+              <p className="text-muted-foreground text-xs font-medium tracking-widest uppercase">
+                Inspirations
+              </p>
 
-              <div className="w-full overflow-x-auto whitespace-nowrap">
-                <div className="flex gap-2 pb-2">
-                  {inspirations.map((inspiration) => (
-                    <Button
-                      key={inspiration}
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleInspirationChipClick(inspiration)}
-                      className="text-sm"
-                    >
-                      <Plus className="size-4" />
-                      {inspiration}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+              {chipRow(inspirations, handleInspirationChipClick)}
             </div>
 
-            {/* Duration slider */}
             {durationSlider}
 
-            {/* Advanced options — variation key */}
             {advancedOptions("simple")}
           </TabsContent>
 
           {/* ─── Custom mode ──────────────────────────────────────────────── */}
           <TabsContent value="custom">
             <div className="mt-6 flex flex-col gap-5">
-              {/* Vibe description — same field, re-used across modes */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="custom-desc" className="text-sm font-medium">
-                  Describe the vibe of your song
+                  Describe the vibe
                 </label>
 
                 <Textarea
                   id="custom-desc"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="placeholder:text-muted-foreground/70 min-h-20 resize-none"
+                  className="placeholder:text-muted-foreground/60 min-h-20 resize-none text-sm"
                   placeholder="A dreamy lo-fi hip-hop song, perfect for studying or relaxing..."
                 />
               </div>
 
               {/* Lyrics section */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
                   <label
                     htmlFor="custom-lyrics"
@@ -374,36 +390,26 @@ function TrackGenPanel() {
                     Lyrics
                   </label>
 
-                  <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant={
-                        customModeType === "auto" ? "secondary" : "ghost"
-                      }
-                      size="sm"
-                      onClick={() => {
-                        setCustomModeType("auto");
-                        setLyrics("");
-                      }}
-                      className="text-sm"
-                    >
-                      Auto
-                    </Button>
-
-                    <Button
-                      type="button"
-                      variant={
-                        customModeType === "manual" ? "secondary" : "ghost"
-                      }
-                      size="sm"
-                      onClick={() => {
-                        setCustomModeType("manual");
-                        setLyrics("");
-                      }}
-                      className="text-sm"
-                    >
-                      Manual
-                    </Button>
+                  {/* Auto / Manual toggle pills */}
+                  <div className="bg-muted flex items-center gap-0.5 rounded-md p-0.5">
+                    {(["auto", "manual"] as CustomMode[]).map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => {
+                          setCustomModeType(type);
+                          setLyrics("");
+                        }}
+                        className={cn(
+                          "focus-visible:ring-ring focus-visible:ring-offset-muted rounded px-2.5 py-0.5 text-xs font-medium capitalize transition-all duration-150 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none",
+                          customModeType === type
+                            ? "bg-background text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground",
+                        )}
+                      >
+                        {type}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
@@ -419,7 +425,7 @@ function TrackGenPanel() {
                         : "Craft your own lyrics..."
                       : "Describe your lyrics, e.g., a sad song about lost love"
                   }
-                  className="placeholder:text-muted-foreground/70 min-h-30 resize-none"
+                  className="placeholder:text-muted-foreground/60 min-h-28 resize-none text-sm"
                 />
               </div>
 
@@ -427,7 +433,7 @@ function TrackGenPanel() {
               <div className="flex items-center justify-end gap-2">
                 <label
                   htmlFor="instrumental-custom"
-                  className="text-sm font-medium"
+                  className="text-muted-foreground text-xs font-medium"
                 >
                   Instrumental
                 </label>
@@ -440,7 +446,7 @@ function TrackGenPanel() {
               </div>
 
               {/* Genres */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <label htmlFor="genres" className="text-sm font-medium">
                   Genres
                 </label>
@@ -449,46 +455,38 @@ function TrackGenPanel() {
                   id="genres"
                   value={genres}
                   onChange={(e) => setGenres(e.target.value)}
-                  placeholder="Pop, Rock, Hip-Hop, Jazz, Classical, R&B, Country, EDM..."
-                  className="placeholder:text-muted-foreground/70 min-h-20 resize-none"
+                  placeholder="Pop, Rock, Hip-Hop, Jazz, Classical, R&B..."
+                  className="placeholder:text-muted-foreground/60 min-h-16 resize-none text-sm"
                 />
 
-                <div className="w-full overflow-x-auto whitespace-nowrap">
-                  <div className="flex items-center gap-2 pb-2">
-                    {musicStyles.map((style) => (
-                      <Button
-                        key={style}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleStyleChipClick(style)}
-                        className="text-sm"
-                      >
-                        <Plus className="size-4" />
-                        {style}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+                {chipRow(musicStyles, handleStyleChipClick)}
               </div>
 
-              {/* Duration slider */}
               {durationSlider}
 
-              {/* Advanced options — variation key */}
               {advancedOptions("custom")}
             </div>
           </TabsContent>
         </Tabs>
       </div>
 
-      {/* ─── Footer: Generate button ──────────────────────────────────────── */}
-      <div className="flex flex-col gap-2 border-t p-4">
+      {/* ─── Sticky footer: Generate button ──────────────────────────────── */}
+      <div className="border-t p-4">
         <Button
           type="button"
           size="lg"
           onClick={handleGenerate}
           disabled={isGenerating}
-          className="w-full font-medium"
+          className={cn(
+            "w-full font-semibold",
+            "from-primary via-primary/90 to-accent bg-linear-to-r",
+            "text-primary-foreground",
+            "shadow-sm",
+            "transition-all duration-200",
+            "hover:shadow-primary/25 hover:shadow-md hover:brightness-110",
+            "focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+            "active:scale-[0.98]",
+          )}
         >
           {isGenerating ? (
             <>
@@ -503,13 +501,13 @@ function TrackGenPanel() {
           )}
         </Button>
 
-        {/* Credit cost hint */}
-        <p className="text-muted-foreground text-center text-xs">
-          Each generation costs <span className="font-semibold">2 credits</span>
+        <p className="text-muted-foreground mt-2 text-center text-xs">
+          Each generation costs{" "}
+          <span className="text-foreground font-semibold">2 credits</span>
         </p>
 
         {error && (
-          <p className="text-destructive text-center text-sm">{error}</p>
+          <p className="text-destructive mt-2 text-center text-sm">{error}</p>
         )}
       </div>
     </div>

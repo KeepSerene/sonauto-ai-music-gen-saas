@@ -14,7 +14,7 @@ export default async function AccountPage({
   const pathname = `/account/${account?.join("/") ?? "settings"}`;
 
   return (
-    <main className="flex px-4 py-12">
+    <main className="flex grow flex-col overflow-y-auto px-4 py-12">
       <AccountView pathname={pathname} />
     </main>
   );

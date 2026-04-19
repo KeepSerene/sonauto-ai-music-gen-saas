@@ -64,7 +64,7 @@ export default function Header({ isAuthenticated }: LandingHeaderProps) {
       className={cn(
         "sticky top-0 left-0 z-50 w-full border-b transition-all duration-200",
         scrolled
-          ? "border-border/60 bg-background/90 shadow-sm backdrop-blur-md"
+          ? "border-border/60 bg-background/80 shadow-sm backdrop-blur-md"
           : "border-transparent bg-transparent",
       )}
     >

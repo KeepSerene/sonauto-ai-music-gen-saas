@@ -22,7 +22,7 @@ export default async function LandingPage() {
       <Header isAuthenticated={isAuthenticated} />
 
       <main className="flex-1">
-        <Hero />
+        <Hero isAuthenticated={isAuthenticated} />
         <HowItWorks />
         <Features />
         <Pricing />

@@ -6,6 +6,8 @@ import useAudioPlayerStore from "~/stores/useAudioPlayerStore";
 import TrackThumbnail from "./tracks/TrackThumbnail";
 import { Heart, Loader2, Pause, Play } from "lucide-react";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Card, CardContent } from "./ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { cn } from "~/lib/utils";
 import { toast } from "sonner";
@@ -30,11 +32,13 @@ function TrackCard({ track }: { track: TrackCardProps }) {
   const setIsPlaying = useAudioPlayerStore((state) => state.setIsPlaying);
   const setIsDismissed = useAudioPlayerStore((state) => state.setIsDismissed);
 
+  const isActiveTrack = activeTrack?.id === track.id;
+  const isThisPlaying = isActiveTrack && isPlaying;
+
   const handlePlayAudio = async () => {
     if (!track.audioUrl) return;
 
-    // If this track is already loaded in the player, show it and toggle play/pause
-    if (activeTrack?.id === track.id) {
+    if (isActiveTrack) {
       setIsDismissed(false);
       setIsPlaying(!isPlaying);
       return;
@@ -69,44 +73,100 @@ function TrackCard({ track }: { track: TrackCardProps }) {
   };
 
   return (
-    <article
+    <Card
       onClick={handlePlayAudio}
-      className="bg-muted cursor-pointer overflow-hidden rounded-md"
+      className={cn(
+        "group cursor-pointer overflow-hidden border py-0 transition-all duration-200",
+        "hover:border-primary/40 hover:shadow-primary/10 hover:shadow-md",
+        "hover:-translate-y-0.5",
+        isActiveTrack && "border-primary/50 shadow-primary/15 shadow-sm",
+      )}
     >
-      <div className="group relative">
+      {/* ── Thumbnail ───────────────────────────────────────────── */}
+      <div className="relative overflow-hidden">
         <TrackThumbnail
           src={track.thumbnailUrl}
           alt={`${track.title} album cover`}
-          className="aspect-square rounded-br-none rounded-bl-none"
+          className="aspect-square w-full rounded-none"
         />
 
-        <div className="absolute inset-0 flex items-center justify-center bg-black/15 opacity-0 transition-opacity group-hover:opacity-100">
+        {/* Overlay */}
+        <div
+          className={cn(
+            "absolute inset-0 flex items-center justify-center transition-all duration-200",
+            "bg-linear-to-t from-black/50 via-black/10 to-transparent",
+            isThisPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+          )}
+        >
           <div
-            aria-label={isPlaying ? "Pause track" : "Play track"}
-            className="flex size-12 items-center justify-center rounded-full bg-black/60 transition-transform group-hover:scale-105"
+            aria-label={isThisPlaying ? "Pause track" : "Play track"}
+            className={cn(
+              "flex size-11 items-center justify-center rounded-full",
+              "bg-black/55 ring-1 ring-white/20 backdrop-blur-sm",
+              "transition-transform duration-200",
+              "group-hover:scale-105 group-hover:ring-white/40",
+            )}
           >
-            {isPlaying ? (
-              <Pause className="size-6 text-white" />
+            {isThisPlaying ? (
+              <Pause className="size-5 fill-white text-white" />
             ) : (
-              <Play className="size-6 text-white" />
+              <Play className="size-5 translate-x-0.5 fill-white text-white" />
             )}
           </div>
         </div>
+
+        {/* Instrumental badge */}
+        {track.isInstrumental && (
+          <div className="absolute top-2 left-2">
+            <Badge
+              variant="secondary"
+              className="border-white/20 bg-black/60 px-1.5 py-0 text-[10px] font-medium text-white backdrop-blur-sm"
+            >
+              Instrumental
+            </Badge>
+          </div>
+        )}
+
+        {/* Active track playing indicator */}
+        {isThisPlaying && (
+          <div className="absolute right-2.5 bottom-2.5 flex items-end gap-1">
+            {[1, 2, 3].map((i) => (
+              <span
+                key={i}
+                style={{
+                  animation: `audio-play ${0.5 + i * 0.15}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.15}s`,
+                }}
+                className="h-3.5 w-0.75 origin-bottom rounded-full bg-white shadow-sm"
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="mt-2 p-2 pt-0">
-        <h3 className="text-accent-foreground truncate text-sm font-medium">
+      {/* ── Info ────────────────────────────────────────────────── */}
+      <CardContent className="p-2.5 pt-2">
+        <h3
+          className={cn(
+            "truncate text-sm leading-snug font-semibold tracking-tight transition-colors duration-150",
+            isActiveTrack ? "text-primary" : "text-foreground",
+          )}
+        >
           {track.title}
         </h3>
 
-        <p className="text-muted-foreground mt-0.5 text-xs">
+        <p className="text-muted-foreground mt-0.5 truncate text-xs">
           {track.user.name}
         </p>
 
-        <div className="text-muted-foreground mt-1 flex items-center justify-between gap-2 text-xs">
-          <span>{track.listensCount} listens</span>
+        {/* Stats row */}
+        <div className="mt-2 flex items-center justify-between gap-1">
+          <span className="text-muted-foreground text-[11px] tabular-nums">
+            {track.listensCount.toLocaleString()}{" "}
+            <span className="opacity-70">plays</span>
+          </span>
 
-          <span className="inline-flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -121,14 +181,15 @@ function TrackCard({ track }: { track: TrackCardProps }) {
                         ? "Unlike track"
                         : "Like track"
                   }
-                  className="rounded-full"
+                  className="size-6 rounded-full"
                 >
                   {isLoadingLike ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <Loader2 className="size-3.5 animate-spin" />
                   ) : (
                     <Heart
-                      className={cn("size-4", {
+                      className={cn("size-3.5 transition-colors duration-150", {
                         "fill-pink-500 text-pink-500": hasLiked,
+                        "text-muted-foreground": !hasLiked,
                       })}
                     />
                   )}
@@ -138,11 +199,13 @@ function TrackCard({ track }: { track: TrackCardProps }) {
               <TooltipContent>{hasLiked ? "Unlike" : "Like"}</TooltipContent>
             </Tooltip>
 
-            {likesCount}
-          </span>
+            <span className="text-muted-foreground text-[11px] tabular-nums">
+              {likesCount.toLocaleString()}
+            </span>
+          </div>
         </div>
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 }
 

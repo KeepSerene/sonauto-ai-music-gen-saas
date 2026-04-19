@@ -5,7 +5,15 @@ import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const Footer = () => (
-  <footer className="border-border/60 border-t px-4 py-12 sm:px-6 lg:px-8">
+  <footer className="border-border/60 relative overflow-hidden border-t px-4 py-12 sm:px-6 lg:px-8">
+    {/* Ambient bottom glow */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
+    >
+      <div className="bg-primary/25 h-64 w-150 rounded-full blur-[120px] sm:w-200" />
+    </div>
+
     <div className="mx-auto max-w-6xl">
       {/* Top row */}
       <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
@@ -14,7 +22,7 @@ const Footer = () => (
           <Link
             href="/"
             aria-label="Sonauto home"
-            className="text-foreground hover:text-primary w-fit transition-colors duration-150"
+            className="hover:text-primary w-fit transition-colors duration-150"
           >
             <Logo />
           </Link>

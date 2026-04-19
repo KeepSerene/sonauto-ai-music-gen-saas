@@ -77,6 +77,7 @@ export const auth = betterAuth({
           ],
           successUrl: "/dashboard?status=success&checkout_id={CHECKOUT_ID}",
           authenticatedUsersOnly: true,
+          returnUrl: `${env.NEXT_PUBLIC_APP_URL}/dashboard`,
         }),
         portal({ returnUrl: `${env.NEXT_PUBLIC_APP_URL}/dashboard` }),
         webhooks({

@@ -44,8 +44,6 @@ function AudioPlayer() {
   const [isLyricsModalOpen, setIsLyricsOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // audioRef is always mounted (not conditional) so event listeners and effects
-  // can reliably reference it from the very first render.
   const audioRef = useRef<HTMLAudioElement>(null);
   const { open, isMobile } = useSidebar();
 
@@ -72,7 +70,7 @@ function AudioPlayer() {
     setIsPlaying(true);
   }, [track, setIsPlaying]);
 
-  // ── Effect 2: isPlaying toggled by user or external caller ───────────────
+  // ── Effect 2: isPlaying toggled ──────────────────────────────────────────
   useEffect(() => {
     const audio = audioRef.current;
 
@@ -88,7 +86,7 @@ function AudioPlayer() {
     }
   }, [isPlaying, setIsPlaying]);
 
-  // ── Effect 3: bind persistent audio events (once on mount) ───────────────
+  // ── Effect 3: bind persistent audio events ───────────────────────────────
   useEffect(() => {
     const audio = audioRef.current;
 
@@ -165,16 +163,10 @@ function AudioPlayer() {
     }
   };
 
-  // ── Fixed-position offset ─────────────────────────────────────────────────
   const leftOffset = !isMobile && open ? "var(--sidebar-width)" : "0px";
 
   return (
     <>
-      {/*
-       * The <audio> element is always in the DOM regardless of whether a
-       * track is loaded or whether the player UI is visible. This ensures
-       * audioRef.current is never null when effects or event listeners run.
-       */}
       <audio ref={audioRef} preload="metadata" className="hidden" />
 
       {track && !isDismissed && (
@@ -182,8 +174,15 @@ function AudioPlayer() {
           style={{ left: leftOffset }}
           className="fixed right-0 bottom-0 z-50 p-3 transition-[left] duration-300 ease-in-out"
         >
-          <Card className="relative w-full overflow-hidden">
-            {/* ── Dismiss button ─────────────────────────────────────────── */}
+          <Card
+            className={[
+              "relative w-full overflow-hidden",
+              "from-card via-card to-primary/30 bg-linear-to-br",
+              "border-border/80",
+              "shadow-lg shadow-black/10",
+            ].join(" ")}
+          >
+            {/* Dismiss button */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -198,12 +197,13 @@ function AudioPlayer() {
                   <X className="size-3" />
                 </Button>
               </TooltipTrigger>
+
               <TooltipContent>Close</TooltipContent>
             </Tooltip>
 
-            {/* ── Player body ─────────────────────────────────────────────── */}
+            {/* Player body */}
             <div className="p-3 pr-10 pb-2">
-              {/* Top row: thumbnail + title + controls */}
+              {/* Top row */}
               <div className="flex items-center gap-2">
                 {/* Track info */}
                 <div className="flex min-w-0 flex-1 items-center gap-2.5">
@@ -214,7 +214,7 @@ function AudioPlayer() {
                   />
 
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">
+                    <p className="truncate text-sm font-semibold">
                       {track.title}
                     </p>
 
@@ -248,7 +248,7 @@ function AudioPlayer() {
                   </TooltipContent>
                 </Tooltip>
 
-                {/* Volume slider — hidden on small screens to save space */}
+                {/* Volume slider */}
                 <div className="hidden items-center gap-1.5 sm:flex">
                   {volume[0] !== undefined &&
                     (volume[0] === 0 ? (
@@ -324,7 +324,7 @@ function AudioPlayer() {
                 </DropdownMenu>
               </div>
 
-              {/* Progress / seek row */}
+              {/* Seek row */}
               <div className="mt-2 flex items-center gap-2">
                 <span className="text-muted-foreground w-9 shrink-0 text-right text-[10px] tabular-nums">
                   {formatTime(elapsedTime, "clock")}
