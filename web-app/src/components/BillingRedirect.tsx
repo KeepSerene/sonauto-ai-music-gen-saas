@@ -21,7 +21,7 @@ export default function BillingRedirect() {
 
         // If the method returns an error object without throwing, catch it here
         if (res?.error) {
-          throw new Error(res.error.message || "Failed to load portal");
+          throw new Error(res.error.message ?? "Failed to load portal");
         }
       } catch (error) {
         console.error("Customer Portal Error:", error);

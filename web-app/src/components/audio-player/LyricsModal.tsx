@@ -45,11 +45,11 @@ export default function LyricsModal({
       <DialogContent className="flex max-h-[85vh] w-[95vw] max-w-lg flex-col sm:w-full">
         <DialogHeader>
           <DialogTitle className="text-xl">
-            {title || "Track Lyrics"}
+            {title ?? "Track Lyrics"}
           </DialogTitle>
 
           <DialogDescription className="sr-only">
-            Lyrics for {title || "this track"}
+            Lyrics for {title ?? "this track"}
           </DialogDescription>
         </DialogHeader>
 

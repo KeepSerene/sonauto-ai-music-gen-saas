@@ -89,9 +89,7 @@ async function DashboardPage() {
         const primaryCategory = curr.categories[0];
 
         if (primaryCategory) {
-          if (!acc[primaryCategory.name]) {
-            acc[primaryCategory.name] = [];
-          }
+          acc[primaryCategory.name] ??= [];
 
           if (acc[primaryCategory.name]!.length < 10) {
             acc[primaryCategory.name]!.push(curr);

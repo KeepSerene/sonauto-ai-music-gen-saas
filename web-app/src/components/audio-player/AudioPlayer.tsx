@@ -68,7 +68,7 @@ function AudioPlayer() {
     });
 
     setIsPlaying(true);
-  }, [track, setIsPlaying]);
+  }, [track, setIsPlaying, setIsDismissed, setElapsedTime, setDuration]);
 
   // ── Effect 2: isPlaying toggled ──────────────────────────────────────────
   useEffect(() => {

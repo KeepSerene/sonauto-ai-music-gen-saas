@@ -40,7 +40,9 @@ function RenameDialog({ track, onRename, onClose }: RenameDialogProps) {
           <DialogHeader>
             <DialogTitle>Rename Track</DialogTitle>
 
-            <DialogDescription>Click save when you're done.</DialogDescription>
+            <DialogDescription>
+              Click save when you&apos;re done.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="mt-4 grid grid-cols-1 gap-4">

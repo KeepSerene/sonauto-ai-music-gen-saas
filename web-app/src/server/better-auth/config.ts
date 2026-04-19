@@ -2,13 +2,7 @@ import { Polar } from "@polar-sh/sdk";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "~/server/db";
-import {
-  polar,
-  checkout,
-  portal,
-  usage,
-  webhooks,
-} from "@polar-sh/better-auth";
+import { polar, checkout, portal, webhooks } from "@polar-sh/better-auth";
 import { env } from "~/env";
 import {
   PASSWORD_REGEX,
@@ -41,7 +35,9 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path === "/sign-up/email") {
-        const password = ctx.body?.password as string | undefined;
+        const password = (ctx.body as Record<string, unknown>)?.password as
+          | string
+          | undefined;
 
         if (password && !PASSWORD_REGEX.test(password)) {
           throw new APIError("BAD_REQUEST", {
