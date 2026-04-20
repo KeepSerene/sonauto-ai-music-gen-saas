@@ -453,7 +453,7 @@ function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
                         </div>
 
                         {track.prompt && (
-                          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+                          <p className="text-muted-foreground mt-0.5 truncate text-xs capitalize">
                             {track.prompt}
                           </p>
                         )}

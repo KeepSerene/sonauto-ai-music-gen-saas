@@ -19,6 +19,12 @@ import { formatTime } from "~/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "~/lib/utils";
+import { authClient } from "~/server/better-auth/client";
+import {
+  POLAR_PRODUCER_PACK_ID,
+  POLAR_STARTER_PACK_ID,
+  POLAR_STUDIO_PACK_ID,
+} from "~/lib/constants";
 
 type GenerationMode = "simple" | "custom";
 type CustomMode = "auto" | "manual";
@@ -58,7 +64,7 @@ const musicStyles = [
   "Ambient pads",
 ];
 
-function TrackGenPanel() {
+function TrackGenPanel({ credits }: { credits: number }) {
   const [mode, setMode] = useState<GenerationMode>("simple");
   const [customModeType, setCustomModeType] = useState<CustomMode>("manual");
   const [description, setDescription] = useState("");
@@ -190,6 +196,21 @@ function TrackGenPanel() {
       setError(errMsg);
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    try {
+      await authClient.checkout({
+        products: [
+          POLAR_STARTER_PACK_ID,
+          POLAR_PRODUCER_PACK_ID,
+          POLAR_STUDIO_PACK_ID,
+        ],
+      });
+    } catch (error) {
+      console.error("Failed to upgrade:", error);
+      toast.error("Failed to upgrade your pack.");
     }
   };
 
@@ -476,7 +497,7 @@ function TrackGenPanel() {
           type="button"
           size="lg"
           onClick={handleGenerate}
-          disabled={isGenerating}
+          disabled={isGenerating || credits < 2}
           className={cn(
             "w-full font-semibold",
             "from-primary via-primary/90 to-accent bg-linear-to-r",
@@ -502,8 +523,24 @@ function TrackGenPanel() {
         </Button>
 
         <p className="text-muted-foreground mt-2 text-center text-xs">
-          Each generation costs{" "}
-          <span className="text-foreground font-semibold">2 credits</span>
+          {credits < 2 ? (
+            <>
+              No credits remaining.{" "}
+              <Button
+                type="button"
+                variant="link"
+                onClick={handleUpgrade}
+                className="px-0 text-xs"
+              >
+                Upgrade
+              </Button>
+            </>
+          ) : (
+            <>
+              Each generation costs{" "}
+              <span className="text-foreground font-semibold">2 credits</span>
+            </>
+          )}
         </p>
 
         {error && (
