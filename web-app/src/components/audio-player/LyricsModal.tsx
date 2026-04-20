@@ -68,7 +68,7 @@ export default function LyricsModal({
 
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={handleCopyLyrics}
           >
