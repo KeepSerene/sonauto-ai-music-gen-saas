@@ -32,7 +32,7 @@ export default function NotFoundPage() {
           {/* Ambient glow */}
           <div
             aria-hidden="true"
-            className="bg-primary/15 absolute size-28 rounded-full blur-2xl"
+            className="not-dark:bg-primary/35 dark:bg-primary/25 absolute size-28 rounded-full blur-2xl"
           />
 
           <div className="border-border bg-muted relative flex size-20 items-center justify-center rounded-2xl border shadow-sm">
