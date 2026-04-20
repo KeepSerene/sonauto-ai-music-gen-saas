@@ -51,6 +51,9 @@ venv.bak/
 *.mp3
 *.webp
 
+# EXCEPTION: Allow static webp images in the Next.js public folder
+!web-app/public/**/*.webp
+
 # Distribution / packaging
 build/
 develop-eggs/
