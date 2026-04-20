@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     siteName: "Sonauto",
     images: [
       {
-        url: "/hero-banner-dark.webp",
+        url: "/images/hero-banner-dark.webp",
         width: 1200,
         height: 630,
         alt: "Sonauto — AI Music Generation. Sonata, Automated.",
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     creator: "@UsualLearner",
     site: "@sonauto",
-    images: ["/hero-banner-dark.webp"],
+    images: ["/images/hero-banner-dark.webp"],
   },
   icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
   alternates: {
