@@ -1,5 +1,6 @@
 "use client";
 
+import { Clock } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
 import AppBreadcrumbs from "~/components/AppBreadcrumbs";
 import {
@@ -9,12 +10,28 @@ import {
 } from "~/components/ui/tooltip";
 import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 import ThemeToggle from "./theme/ThemeToggle";
+import { Badge } from "./ui/badge";
+import { DAILY_GENERATION_LIMIT } from "~/lib/constants";
 
-function AppHeader() {
+interface AppHeaderProps {
+  rateLimitResetAt: string | null;
+}
+
+function AppHeader({ rateLimitResetAt }: AppHeaderProps) {
   const { open } = useSidebar();
+
+  // Format the reset time in the user's local timezone.
+  // e.g. "9:45 AM" or "21:45" depending on their locale.
+  const resetTime = rateLimitResetAt
+    ? new Date(rateLimitResetAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   return (
     <header className="bg-background/80 supports-backdrop-filter:bg-background/60 sticky top-0 left-0 z-10 flex shrink-0 items-center justify-between gap-4 border-b px-4 py-2 backdrop-blur-sm">
+      {/* ── Left: sidebar toggle + breadcrumbs ─────────────────────────── */}
       <div className="flex shrink-0 grow items-center gap-2">
         <Tooltip>
           <TooltipTrigger type="button" asChild>
@@ -35,7 +52,36 @@ function AppHeader() {
         <AppBreadcrumbs />
       </div>
 
-      <ThemeToggle />
+      {/* ── Right: rate-limit badge (conditional) + theme toggle ────────── */}
+      <div className="flex shrink-0 items-center gap-3">
+        {resetTime && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge
+                variant="outline"
+                className="gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-600 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
+              >
+                <Clock className="size-3 shrink-0" aria-hidden="true" />
+
+                {/* Mobile: icon + terse label */}
+                <span className="sm:hidden">Daily limit hit</span>
+
+                {/* Desktop: icon + reset time */}
+                <span className="hidden sm:inline">
+                  Daily limit hit · Resets at {resetTime}
+                </span>
+              </Badge>
+            </TooltipTrigger>
+
+            <TooltipContent side="bottom" className="max-w-60 text-center">
+              You&apos;ve used all {DAILY_GENERATION_LIMIT} generations for
+              today. Your limit resets at {resetTime} tomorrow.
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

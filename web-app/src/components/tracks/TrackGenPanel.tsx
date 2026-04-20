@@ -172,6 +172,14 @@ function TrackGenPanel({ credits }: { credits: number }) {
           typeof data.error === "string"
             ? data.error
             : "Generation failed. Please try again.";
+
+        if (res.status === 429) {
+          toast.warning(msg, { duration: 8000 });
+          router.refresh();
+
+          return;
+        }
+
         throw new Error(msg);
       }
 

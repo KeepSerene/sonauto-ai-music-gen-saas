@@ -3,6 +3,7 @@ import { z } from "zod";
 import { inngest } from "~/inngest/client";
 import { db } from "~/server/db";
 import { getSession } from "~/server/better-auth/server";
+import { DAILY_GENERATION_LIMIT } from "~/lib/constants";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INPUT VALIDATION
@@ -51,7 +52,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Validate request body first
+  // ─── Daily rate limit check ──────────────────────────────────────────
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const todayCount = await db.song.count({
+    where: { userId: session.user.id, createdAt: { gte: since } },
+  });
+
+  if (todayCount >= DAILY_GENERATION_LIMIT) {
+    return NextResponse.json(
+      {
+        error: `You've reached your daily limit of ${DAILY_GENERATION_LIMIT} generations. Come back tomorrow!`,
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": "86400" },
+      },
+    );
+  }
+
+  // 2. Validate request body
   const parsed = generateSchema.safeParse(await req.json());
 
   if (!parsed.success) {
@@ -63,7 +82,7 @@ export async function POST(req: NextRequest) {
 
   const body = parsed.data;
 
-  // 3. Atomic credit deduction.
+  // 3. Atomic credit deduction
   const deducted = await db.user.updateMany({
     where: { id: session.user.id, credits: { gte: 2 } },
     data: { credits: { decrement: 2 } },
@@ -79,8 +98,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 4. Create the Song record immediately.
-  // Status starts as "queued" — Inngest will update it.
+  // 4. Create the Song record immediately (status: "queued")
   const song = await db.song.create({
     data: {
       title: body.description.slice(0, 60),
@@ -112,6 +130,6 @@ export async function POST(req: NextRequest) {
     console.error("[generate] inngest.send failed — job will not run:", err);
   }
 
-  // 6. Return the new song ID.
+  // 6. Return the new song ID
   return NextResponse.json({ songId: song.id }, { status: 202 });
 }
