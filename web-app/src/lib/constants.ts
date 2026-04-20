@@ -54,7 +54,6 @@ export const HOME_NAV_LINKS = [
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
 ] as const;
-
 export const HOME_HOW_IT_WORKS_STEPS = [
   {
     number: "01",
@@ -75,7 +74,6 @@ export const HOME_HOW_IT_WORKS_STEPS = [
     body: "Download your track as a high-quality WAV, publish it to the community, or keep it private. Your song, your call.",
   },
 ] as const;
-
 export const HOME_FEATURES = [
   {
     icon: SlidersHorizontal,
@@ -108,7 +106,6 @@ export const HOME_FEATURES = [
     body: "No monthly fees or subscriptions. Buy credits when you need them and spend them only when you generate.",
   },
 ] as const;
-
 export const HOME_PRICING_PLANS = [
   {
     name: "Free",
@@ -187,7 +184,6 @@ export const HOME_PRICING_PLANS = [
     ],
   },
 ] as const;
-
 export const HOME_FOOTER_SOCIALS = [
   {
     label: "Portfolio",
@@ -210,13 +206,11 @@ export const HOME_FOOTER_SOCIALS = [
     icon: XIcon,
   },
 ] as const;
-
 export const HOME_FOOTER_NAV_LINKS = [
   { label: "How it Works", href: "#how-it-works" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
 ] as const;
-
 export const AUTH_LAYOUT_FLOATING_ICONS = [
   {
     Icon: Music2,

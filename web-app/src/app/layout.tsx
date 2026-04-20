@@ -37,9 +37,13 @@ export const metadata: Metadata = {
     "music creation tool",
     "lyric writer AI",
   ],
-  // TODO: Replace with the solo developer's actual name and portfolio URL
-  authors: [{ name: "Your Name", url: "https://your-portfolio.com" }],
-  creator: "Your Name",
+  authors: [
+    {
+      name: "Dhrubajyoti Bhattacharjee",
+      url: "https://math-to-dev.vercel.app",
+    },
+  ],
+  creator: "Dhrubajyoti Bhattacharjee",
   publisher: "Sonauto",
   robots: {
     index: true,
@@ -59,10 +63,9 @@ export const metadata: Metadata = {
     title: APP_TITLE,
     description: APP_DESCRIPTION,
     siteName: "Sonauto",
-    // TODO: Add an og-image.png (1200×630) to the /public directory
     images: [
       {
-        url: "/og-image.png",
+        url: "/hero-banner-dark.webp",
         width: 1200,
         height: 630,
         alt: "Sonauto — AI Music Generation. Sonata, Automated.",
@@ -73,10 +76,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: APP_TITLE,
     description: APP_DESCRIPTION,
-    // TODO: Replace with your actual Twitter/X handle
-    creator: "@your_twitter_handle",
+    creator: "@UsualLearner",
     site: "@sonauto",
-    images: ["/og-image.png"],
+    images: ["/hero-banner-dark.webp"],
   },
   icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
   alternates: {
