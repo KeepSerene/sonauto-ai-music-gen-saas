@@ -234,7 +234,7 @@ The client polls for completion every 5 seconds via `router.refresh()` on the Tr
 ## 📁 Project Structure (Tentative!)
 
 ```
-sonauto-ai-music-saas/
+sonauto-ai-music-gen-saas/
 │
 ├── web-app/                          # Next.js 15 application
 │   ├── prisma/
@@ -415,8 +415,8 @@ You will also need accounts with:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/KeepSerene/sonauto-ai-music-saas.git
-cd sonauto-ai-music-saas
+git clone https://github.com/KeepSerene/sonauto-ai-music-gen-saas.git
+cd sonauto-ai-music-gen-saas
 ```
 
 ---
