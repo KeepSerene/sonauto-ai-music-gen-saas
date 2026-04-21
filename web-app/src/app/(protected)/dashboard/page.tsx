@@ -140,7 +140,7 @@ async function DashboardPage() {
 
   return (
     <main className="flex flex-1 flex-col overflow-y-auto">
-      <div className="flex-1 p-4 pb-0">
+      <div className="flex-1 p-4">
         <h1 className="text-2xl font-bold tracking-tight">Discover Tracks</h1>
 
         {/* Trending tracks */}
