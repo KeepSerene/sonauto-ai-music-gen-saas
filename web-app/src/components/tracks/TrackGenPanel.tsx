@@ -107,7 +107,8 @@ function TrackGenPanel({ credits }: { credits: number }) {
     const next = !isInstrumental;
     setIsInstrumental(next);
 
-    if (next && mode === "custom" && customModeType === "manual") {
+    // Applies to both custom-auto (lyrics direction ignored) and custom-manual (lyrics ignored)
+    if (next && mode === "custom") {
       toast.info("Lyrics will be ignored during generation.");
     }
   };
@@ -157,6 +158,11 @@ function TrackGenPanel({ credits }: { credits: number }) {
         isInstrumental,
         audioDuration,
         seed: seed === "" ? -1 : seed,
+        ...(apiMode === "custom-auto" &&
+          !isInstrumental &&
+          lyrics.trim() && {
+            lyricsDescription: lyrics,
+          }),
         ...(apiMode === "custom-manual" && { lyrics }),
       };
 

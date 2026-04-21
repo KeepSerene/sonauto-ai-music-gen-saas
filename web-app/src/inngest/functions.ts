@@ -19,7 +19,8 @@ interface SongGenerateEventData {
   userId: string;
   mode: GenerationMode;
   description: string;
-  lyrics?: string; // only present for custom-manual mode
+  lyricsDescription?: string; // custom-auto only
+  lyrics?: string; // custom-manual only
   isInstrumental: boolean;
   audioDuration: number;
   seed?: number;
@@ -81,6 +82,7 @@ export const generateSong = inngest.createFunction(
       songId,
       mode,
       description,
+      lyricsDescription,
       lyrics,
       isInstrumental,
       audioDuration,
@@ -104,24 +106,31 @@ export const generateSong = inngest.createFunction(
     //
     // In all modes, AI always generates 3 categories (for browsing/filtering).
     // When isInstrumental is true, lyrics generation is skipped entirely.
+    // In the generate-text-content step — replace the existing block:
     const textContent = await step.run("generate-text-content", async () => {
-      // Generate style tags (the ACE-Step prompt) from the description
-      const stylePrompt = await generateTags(description);
+      const rawTags = await generateTags(description);
 
-      // Resolve final lyrics
+      const stylePrompt = isInstrumental
+        ? `instrumental, no vocals, no singing, ${rawTags}`
+        : rawTags;
+
       let finalLyrics: string | null = null;
 
       if (!isInstrumental) {
-        if (mode === "simple" || mode === "custom-auto") {
-          // AI writes the lyrics
+        if (mode === "simple") {
           finalLyrics = await generateLyrics(description, audioDuration);
+        } else if (mode === "custom-auto") {
+          finalLyrics = await generateLyrics(
+            description,
+            audioDuration,
+            lyricsDescription,
+          );
         } else {
-          // custom-manual: user provided lyrics verbatim
+          // custom-manual
           finalLyrics = lyrics ?? null;
         }
       }
 
-      // Always generate a display title and 3 categories
       const [title, categories] = await Promise.all([
         generateTitle(description),
         extractCategories(description),
@@ -168,6 +177,8 @@ export const generateSong = inngest.createFunction(
       lyrics: textContent.finalLyrics ?? "",
       is_instrumental: isInstrumental,
       audio_duration: audioDuration,
+      guidance_scale: 20, // tighter prompt + lyric adherence (default: 15)
+      infer_step: 60,
       seed: seed ?? -1,
     };
     const modalResponse = await step.fetch(env.MODAL_API_URL, {

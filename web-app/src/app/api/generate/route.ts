@@ -25,6 +25,7 @@ const generateSchema = z.discriminatedUnion("mode", [
   z.object({
     mode: z.literal("custom-auto"),
     description: z.string().min(10).max(500),
+    lyricsDescription: z.string().max(1000).optional(),
     isInstrumental: z.boolean().default(false),
     audioDuration: durationSchema,
     seed: seedSchema,
@@ -121,6 +122,8 @@ export async function POST(req: NextRequest) {
         mode: body.mode,
         description: body.description,
         lyrics: body.mode === "custom-manual" ? body.lyrics : undefined,
+        lyricsDescription:
+          body.mode === "custom-auto" ? body.lyricsDescription : undefined,
         isInstrumental: body.isInstrumental,
         audioDuration: body.audioDuration,
         seed: body.seed,

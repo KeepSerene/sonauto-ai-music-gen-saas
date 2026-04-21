@@ -623,7 +623,7 @@ The Modal worker uses a **persistent volume** (`sonauto-models-cache`) to cache 
 | Mode              | Description                                                                                      | Groq calls                                                                |
 | ----------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
 | **Simple**        | User writes a free-form vibe description. AI handles style tags, lyrics, title, and categories.  | `generateTags` + `generateLyrics` + `generateTitle` + `extractCategories` |
-| **Custom Auto**   | User sets a theme/style and the genres field. AI writes matching lyrics for that specific style. | Same as Simple                                                            |
+| **Custom Auto**   | User sets a theme/style and the genres field. AI writes matching lyrics for that specific style. | Similar to Simple                                                         |
 | **Custom Manual** | User writes their own full lyrics. AI only generates style tags, title, and categories.          | `generateTags` + `generateTitle` + `extractCategories`                    |
 | **Instrumental**  | Any mode with the Instrumental toggle on. Lyrics generation is skipped entirely.                 | `generateTags` + `generateTitle` + `extractCategories`                    |
 

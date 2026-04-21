@@ -25,15 +25,21 @@ export async function generateTags(userDescription: string): Promise<string> {
 
 /**
  * Writes full structured lyrics (verse/chorus/bridge) from a description and an audio duration.
+ * For custom-auto mode, an optional lyricsContext guides the thematic/narrative direction.
  */
 export async function generateLyrics(
   userDescription: string,
   audioDuration: number,
+  lyricsContext?: string,
 ): Promise<string> {
+  const prompt = lyricsContext
+    ? `Target duration: ${audioDuration} seconds.\n\nStyle/Vibe: ${userDescription}\n\nLyrics direction (use this to shape the narrative and imagery): ${lyricsContext}`
+    : `Target duration: ${audioDuration} seconds.\n\n${userDescription}`;
+
   const { text } = await generateText({
     model: MODEL,
     system: LYRICS_GENERATOR_PROMPT,
-    prompt: `Target duration: ${audioDuration} seconds.\n\n${userDescription}`,
+    prompt,
   });
   return text.trim();
 }

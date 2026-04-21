@@ -68,15 +68,22 @@ async function DashboardPage() {
   );
   recentTracks.sort((a, b) => calculateScore(b) - calculateScore(a));
 
-  let trendingTracks = recentTracks.slice(0, 10);
+  // Cap trending at 40% of total, max 6.
+  // This guarantees ~60% of songs always flow into categorized sections.
+  const trendingCap = Math.max(
+    1,
+    Math.min(6, Math.ceil(songsWithUrlsAndLikedStatus.length * 0.4)),
+  );
 
-  if (trendingTracks.length < 10) {
+  let trendingTracks = recentTracks.slice(0, trendingCap);
+
+  if (trendingTracks.length < trendingCap) {
     const olderTracks = songsWithUrlsAndLikedStatus.filter(
       (track) => track.createdAt < recentWindowStart,
     );
     olderTracks.sort((a, b) => calculateScore(b) - calculateScore(a));
 
-    const needed = 10 - trendingTracks.length;
+    const needed = trendingCap - trendingTracks.length;
     trendingTracks = [...trendingTracks, ...olderTracks.slice(0, needed)];
   }
 
