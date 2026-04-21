@@ -452,7 +452,7 @@ function TrackGenPanel({ credits }: { credits: number }) {
                   id="custom-lyrics"
                   value={lyrics}
                   onChange={(e) => setLyrics(e.target.value)}
-                  disabled={customModeType === "manual" && isInstrumental}
+                  disabled={mode === "custom" && isInstrumental}
                   placeholder={
                     customModeType === "manual"
                       ? isInstrumental

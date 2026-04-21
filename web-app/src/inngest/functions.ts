@@ -178,7 +178,7 @@ export const generateSong = inngest.createFunction(
       is_instrumental: isInstrumental,
       audio_duration: audioDuration,
       guidance_scale: 20, // tighter prompt + lyric adherence (default: 15)
-      infer_step: 60,
+      infer_step: 70, // default: 60
       seed: seed ?? -1,
     };
     const modalResponse = await step.fetch(env.MODAL_API_URL, {
