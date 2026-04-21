@@ -115,7 +115,7 @@ export default function DeleteTrackDialog({
           >
             {isDeleting ? (
               <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
+                <Loader2 className="mr-1 size-4 animate-spin" />
                 {track.status === "queued" || track.status === "generating"
                   ? "Canceling..."
                   : "Deleting..."}
