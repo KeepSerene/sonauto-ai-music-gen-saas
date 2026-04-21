@@ -72,6 +72,9 @@ function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [trackToRename, setTrackToRename] = useState<Track | null>(null);
   const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
+  const [publishingTrackId, setPublishingTrackId] = useState<string | null>(
+    null,
+  );
   const [trackToDelete, setTrackToDelete] = useState<Track | null>(null);
 
   const activeTrack = useAudioPlayerStore((state) => state.track);
@@ -142,6 +145,8 @@ function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
 
   const handleTogglePublish = async (e: React.MouseEvent, track: Track) => {
     e.stopPropagation();
+    setPublishingTrackId(track.id);
+
     try {
       await togglePublish(track.id);
       toast.success(
@@ -149,6 +154,8 @@ function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
       );
     } catch {
       toast.error("Could not update track. Please try again.");
+    } finally {
+      setPublishingTrackId(null);
     }
   };
 
@@ -465,15 +472,27 @@ function Tracks({ tracks, hasJustRefunded = false }: TracksProps) {
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={(e) => handleTogglePublish(e, track)}
+                          disabled={publishingTrackId === track.id}
+                          onClick={(e) => void handleTogglePublish(e, track)}
                           className={cn(
-                            "h-7 rounded-md px-2.5 text-xs font-medium",
+                            "h-7 rounded-md px-2.5 text-xs font-medium transition-all duration-200",
                             track.isPublished
-                              ? "border-red-400/40 text-red-400 hover:border-red-400/60 hover:bg-red-400/10"
-                              : "border-border/60",
+                              ? "border-destructive/40 text-destructive hover:border-destructive/60 hover:bg-destructive/10 focus-visible:ring-destructive/30 focus-visible:ring-2 focus-visible:ring-offset-1"
+                              : "border-border/60 hover:bg-muted/80 focus-visible:ring-ring/50 focus-visible:ring-2 focus-visible:ring-offset-1",
                           )}
                         >
-                          {track.isPublished ? "Unpublish" : "Publish"}
+                          {publishingTrackId === track.id ? (
+                            <>
+                              <Loader2 className="mr-1.5 size-3 animate-spin" />
+                              {track.isPublished
+                                ? "Unpublishing..."
+                                : "Publishing..."}
+                            </>
+                          ) : track.isPublished ? (
+                            "Unpublish"
+                          ) : (
+                            "Publish"
+                          )}
                         </Button>
 
                         <DropdownMenu>
