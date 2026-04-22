@@ -57,10 +57,10 @@ function AppHeader({ rateLimitResetAt }: AppHeaderProps) {
             <TooltipTrigger asChild>
               <Badge
                 variant="outline"
-                className="gap-1.5 border-amber-500/40 bg-amber-400/10 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
+                className="cursor-help gap-1 border-amber-500/40 bg-amber-400/10 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
               >
-                <Clock className="size-3 shrink-0" aria-hidden="true" />
-                <span>Limit</span>
+                <Clock className="size-4 shrink-0" aria-hidden="true" />
+                <span className="text-sm">Limit</span>
               </Badge>
             </TooltipTrigger>
 
