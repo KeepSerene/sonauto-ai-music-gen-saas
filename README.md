@@ -320,16 +320,17 @@ All new accounts must verify their email address before they can sign in. This p
 4. Until the link is clicked, the account exists in the database but `emailVerified` is `false` and all sign-in attempts are rejected with a `403`.
 5. On click, `emailVerified` is set to `true` and the user is auto-signed in (`autoSignInAfterVerification: true`).
 6. If a user with an unverified email attempts to sign in, a fresh verification email is re-sent automatically (`sendOnSignIn: true`).
-   **Implementation notes:**
+
+**Implementation notes:**
 
 - Email transport: `nodemailer@8.0.5` (pinned exact version, zero transitive dependencies) over Gmail SMTP with an App Password.
 - No custom domain required — Gmail's SMTP relay is used directly.
 - The email is sent with `void` (fire-and-forget) to avoid timing attacks and keep the sign-up response fast on Vercel serverless.
 - The `Verification` model was already present in the Prisma schema — no migration was needed.
 - The existing `authViewPaths` catch-all in `app/(auth)/auth/[...all]/page.tsx` already handles the `verify-email` path via `@daveyplate/better-auth-ui`.
-- The logo in the verification email is a **PNG** (`/public/images/logo-email.png`, 192×192 px, displayed at 64×64). SVG images are blocked by virtually all email clients (Gmail, Outlook, Apple Mail). The `oklch()` color from the SVG source was converted to its sRGB hex equivalent (`#7a52b7`) before rasterising to PNG.
+- The logo in the verification email is a **PNG** (`/public/images/logo-email.png`, 192×192 px, displayed at 64×64).
 
-_To generate a Google App Password: Google Account → Security → 2-Step Verification → App Passwords → create one named "Sonauto"._
+> _To generate a Google App Password: Google Account → Security → 2-Step Verification → App Passwords → create one named "Sonauto"._
 
 ### Daily Generation Limit — Rate-Limit Badge
 
