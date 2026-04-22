@@ -352,8 +352,8 @@ function TrackGenPanel({ credits }: { credits: number }) {
                 id="vibe"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="placeholder:text-muted-foreground/60 min-h-28 resize-none text-sm"
-                placeholder="A dreamy lo-fi hip-hop song, perfect for studying or relaxing..."
+                className="placeholder:text-muted-foreground/60 max-h-48 min-h-28 resize-none overflow-y-auto text-sm"
+                placeholder="e.g., A warm, upbeat indie pop song with female vocals about driving down the coast at sunset..."
               />
             </div>
 
@@ -410,8 +410,8 @@ function TrackGenPanel({ credits }: { credits: number }) {
                   id="custom-desc"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="placeholder:text-muted-foreground/60 min-h-20 resize-none text-sm"
-                  placeholder="A dreamy lo-fi hip-hop song, perfect for studying or relaxing..."
+                  className="placeholder:text-muted-foreground/60 max-h-40 min-h-20 resize-none overflow-y-auto text-sm"
+                  placeholder="e.g., A nostalgic and reflective track about finding old, faded receipts in a winter coat pocket..."
                 />
               </div>
 
@@ -456,11 +456,11 @@ function TrackGenPanel({ credits }: { credits: number }) {
                   placeholder={
                     customModeType === "manual"
                       ? isInstrumental
-                        ? "Lyrics are disabled in instrumental mode"
-                        : "Craft your own lyrics..."
-                      : "Describe your lyrics, e.g., a sad song about lost love"
+                        ? "Lyrics are disabled in instrumental mode."
+                        : "Paste your exact lyrics here.\n\nTip: Use tags like [intro], [verse], and [chorus] to guide the structure!"
+                      : "Describe the story or theme of the song.\n\ne.g., A bittersweet anthem about leaving your hometown and driving into the unknown."
                   }
-                  className="placeholder:text-muted-foreground/60 min-h-28 resize-none text-sm"
+                  className="placeholder:text-muted-foreground/60 max-h-64 min-h-28 resize-none overflow-y-auto text-sm"
                 />
               </div>
 
@@ -490,8 +490,8 @@ function TrackGenPanel({ credits }: { credits: number }) {
                   id="genres"
                   value={genres}
                   onChange={(e) => setGenres(e.target.value)}
-                  placeholder="Pop, Rock, Hip-Hop, Jazz, Classical, R&B..."
-                  className="placeholder:text-muted-foreground/60 min-h-16 resize-none text-sm"
+                  placeholder="e.g., Dream pop, ethereal female vocals, acoustic guitar, melancholic, 120bpm..."
+                  className="placeholder:text-muted-foreground/60 max-h-32 min-h-16 resize-none overflow-y-auto text-sm"
                 />
 
                 {chipRow(musicStyles, handleStyleChipClick)}
