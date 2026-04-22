@@ -20,8 +20,6 @@ interface AppHeaderProps {
 function AppHeader({ rateLimitResetAt }: AppHeaderProps) {
   const { open } = useSidebar();
 
-  // Format the reset time in the user's local timezone.
-  // e.g. "9:45 AM" or "21:45" depending on their locale.
   const resetTime = rateLimitResetAt
     ? new Date(rateLimitResetAt).toLocaleTimeString([], {
         hour: "2-digit",
@@ -59,23 +57,16 @@ function AppHeader({ rateLimitResetAt }: AppHeaderProps) {
             <TooltipTrigger asChild>
               <Badge
                 variant="outline"
-                className="gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-600 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
+                className="gap-1.5 border-amber-500/40 bg-amber-400/10 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400"
               >
                 <Clock className="size-3 shrink-0" aria-hidden="true" />
-
-                {/* Mobile: icon + terse label */}
-                <span className="sm:hidden">Daily limit hit</span>
-
-                {/* Desktop: icon + reset time */}
-                <span className="hidden sm:inline">
-                  Daily limit hit · Resets at {resetTime}
-                </span>
+                <span>Limit</span>
               </Badge>
             </TooltipTrigger>
 
             <TooltipContent side="bottom" className="max-w-60 text-center">
-              You&apos;ve used all {DAILY_GENERATION_LIMIT} generations for
-              today. Your limit resets at {resetTime} tomorrow.
+              You&apos;ve used all {DAILY_GENERATION_LIMIT} daily generations.
+              Resets at {resetTime}.
             </TooltipContent>
           </Tooltip>
         )}

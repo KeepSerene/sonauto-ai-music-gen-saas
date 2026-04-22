@@ -1,6 +1,6 @@
 "use client";
 
-import { CreditCard, Sparkles, Zap } from "lucide-react";
+import { CreditCard, TrendingUp, Zap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -162,7 +162,7 @@ export default function AppSidebar({ user }: AppSidebarProps) {
             "active:scale-[0.98]",
           )}
         >
-          <Sparkles className="size-3.5" />
+          <TrendingUp className="size-3.5" />
           Upgrade
         </Button>
 

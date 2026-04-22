@@ -1,3 +1,4 @@
+import nodemailer from "nodemailer";
 import { Polar } from "@polar-sh/sdk";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -11,6 +12,15 @@ import {
   POLAR_STUDIO_PACK_ID,
 } from "~/lib/constants";
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { getVerificationEmailHtml } from "~/lib/email-templates";
+
+const mailer = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: env.GMAIL_USER,
+    pass: env.GMAIL_APP_PASSWORD,
+  },
+});
 
 const polarClient = new Polar({
   accessToken: env.POLAR_ACCESS_TOKEN,
@@ -31,6 +41,7 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 8,
     maxPasswordLength: 32,
+    requireEmailVerification: true,
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
@@ -47,6 +58,25 @@ export const auth = betterAuth({
         }
       }
     }),
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const htmlContent = getVerificationEmailHtml({
+        name: user.name ?? "there",
+        url: url,
+        appUrl: env.NEXT_PUBLIC_APP_URL,
+      });
+
+      void mailer.sendMail({
+        from: `"Sonauto" <${env.GMAIL_USER}>`,
+        to: user.email,
+        subject: "Verify your Sonauto email",
+        html: htmlContent,
+      });
+    },
   },
   plugins: [
     polar({
