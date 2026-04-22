@@ -25,7 +25,7 @@ export default async function LandingPage() {
         <Hero isAuthenticated={isAuthenticated} />
         <HowItWorks />
         <Features />
-        <Pricing />
+        <Pricing isAuthenticated={isAuthenticated} />
       </main>
 
       <Footer />

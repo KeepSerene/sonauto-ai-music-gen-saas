@@ -1,11 +1,26 @@
-import Link from "next/link";
 import { Check } from "lucide-react";
-import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { HOME_PRICING_PLANS } from "~/lib/constants";
+import {
+  HOME_PRICING_PLANS,
+  POLAR_STARTER_PACK_ID,
+  POLAR_PRODUCER_PACK_ID,
+  POLAR_STUDIO_PACK_ID,
+} from "~/lib/constants";
 import { Badge } from "../ui/badge";
+import PricingCTAButton from "./PricingCTAButton";
 
-const Pricing = () => (
+const PLAN_PRODUCT_IDS: Record<string, string | null> = {
+  Free: null,
+  Starter: POLAR_STARTER_PACK_ID,
+  Producer: POLAR_PRODUCER_PACK_ID,
+  Studio: POLAR_STUDIO_PACK_ID,
+};
+
+interface PricingProps {
+  isAuthenticated: boolean;
+}
+
+const Pricing = ({ isAuthenticated }: PricingProps) => (
   <section
     id="pricing"
     className="relative px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
@@ -76,14 +91,12 @@ const Pricing = () => (
             </div>
 
             {/* CTA */}
-            <Button
-              variant={plan.highlighted ? "default" : "outline"}
-              size="sm"
-              className="w-full"
-              asChild
-            >
-              <Link href={plan.href}>{plan.cta}</Link>
-            </Button>
+            <PricingCTAButton
+              label={plan.cta}
+              productId={PLAN_PRODUCT_IDS[plan.name] ?? null}
+              highlighted={plan.highlighted}
+              isAuthenticated={isAuthenticated}
+            />
 
             {/* Perks */}
             <ul className="mt-6 flex flex-col gap-2.5">

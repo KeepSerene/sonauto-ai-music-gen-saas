@@ -6,6 +6,7 @@ import TracksFetcher from "~/components/tracks/TracksFetcher";
 import { getSession } from "~/server/better-auth/server";
 import { redirect } from "next/navigation";
 import { db } from "~/server/db";
+import { DAILY_GENERATION_LIMIT } from "~/lib/constants";
 
 export const metadata: Metadata = {
   title: "Generate Track",
@@ -16,14 +17,39 @@ async function GeneratePage() {
 
   if (!session?.user) return redirect("/auth/sign-in");
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { credits: true },
-  });
+  // Rolling 24-hour window - for Daily limit hit
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  const [user, dailySongCount, oldestDailySong] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.user.id },
+      select: { credits: true },
+    }),
+    db.song.count({
+      where: { userId: session.user.id, createdAt: { gte: since } },
+    }),
+    db.song.findFirst({
+      where: { userId: session.user.id, createdAt: { gte: since } },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true },
+    }),
+  ]);
+
+  const isRateLimited = dailySongCount >= DAILY_GENERATION_LIMIT;
+  const rateLimitResetAt =
+    isRateLimited && oldestDailySong
+      ? new Date(
+          oldestDailySong.createdAt.getTime() + 24 * 60 * 60 * 1000,
+        ).toISOString()
+      : null;
 
   return (
     <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
-      <TrackGenPanel credits={user?.credits ?? 0} />
+      <TrackGenPanel
+        credits={user?.credits ?? 0}
+        isRateLimited={isRateLimited}
+        rateLimitResetAt={rateLimitResetAt}
+      />
 
       <Suspense
         fallback={

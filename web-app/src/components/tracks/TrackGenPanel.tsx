@@ -13,6 +13,7 @@ import {
   Settings2,
   ChevronDown,
   ChevronUp,
+  Clock,
 } from "lucide-react";
 import { Switch } from "../ui/switch";
 import { formatTime } from "~/lib/utils";
@@ -31,6 +32,7 @@ type CustomMode = "auto" | "manual";
 
 interface GenerateErrorResponse {
   error: string | Record<string, unknown>;
+  resetAt?: string;
 }
 
 // Match the Zod schema in /api/generate/route.ts
@@ -64,7 +66,17 @@ const musicStyles = [
   "Ambient pads",
 ];
 
-function TrackGenPanel({ credits }: { credits: number }) {
+interface TrackGenPanelProps {
+  credits: number;
+  isRateLimited: boolean;
+  rateLimitResetAt: string | null;
+}
+
+function TrackGenPanel({
+  credits,
+  isRateLimited,
+  rateLimitResetAt,
+}: TrackGenPanelProps) {
   const [mode, setMode] = useState<GenerationMode>("simple");
   const [customModeType, setCustomModeType] = useState<CustomMode>("manual");
   const [description, setDescription] = useState("");
@@ -78,6 +90,13 @@ function TrackGenPanel({ credits }: { credits: number }) {
   const [error, setError] = useState("");
 
   const router = useRouter();
+
+  const resetTime = rateLimitResetAt
+    ? new Date(rateLimitResetAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   const handleInspirationChipClick = (inspiration: string) => {
     const parts = description
@@ -174,18 +193,33 @@ function TrackGenPanel({ credits }: { credits: number }) {
 
       if (!res.ok) {
         const data = (await res.json()) as GenerateErrorResponse;
-        const msg =
-          typeof data.error === "string"
-            ? data.error
-            : "Generation failed. Please try again.";
 
         if (res.status === 429) {
+          // Format the reset time client-side so it shows in the user's
+          // local timezone, exactly like AppHeader does.
+          const resetTimeStr = data.resetAt
+            ? new Date(data.resetAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : null;
+
+          const msg = resetTimeStr
+            ? `Daily limit reached. Resets at ${resetTimeStr}.`
+            : typeof data.error === "string"
+              ? data.error
+              : "Daily limit reached.";
+
           toast.warning(msg, { duration: 8000 });
           router.refresh();
 
           return;
         }
 
+        const msg =
+          typeof data.error === "string"
+            ? data.error
+            : "Generation failed. Please try again.";
         throw new Error(msg);
       }
 
@@ -227,6 +261,8 @@ function TrackGenPanel({ credits }: { credits: number }) {
       toast.error("Failed to upgrade your pack.");
     }
   };
+
+  const isGenerateButtonDisabled = isGenerating || credits < 2 || isRateLimited;
 
   // ── Shared sub-components ────────────────────────────────────────────────
 
@@ -511,7 +547,7 @@ function TrackGenPanel({ credits }: { credits: number }) {
           type="button"
           size="lg"
           onClick={handleGenerate}
-          disabled={isGenerating || credits < 2}
+          disabled={isGenerateButtonDisabled}
           className={cn(
             "w-full font-semibold",
             "from-primary via-primary/90 to-accent bg-linear-to-r",
@@ -528,6 +564,11 @@ function TrackGenPanel({ credits }: { credits: number }) {
               <Loader2 className="size-4 animate-spin" />
               Generating...
             </>
+          ) : isRateLimited ? (
+            <>
+              <Clock className="size-4" />
+              Daily Limit Reached
+            </>
           ) : (
             <>
               Generate
@@ -537,7 +578,13 @@ function TrackGenPanel({ credits }: { credits: number }) {
         </Button>
 
         <p className="text-muted-foreground mt-2 text-center text-xs">
-          {credits < 2 ? (
+          {isRateLimited ? (
+            resetTime ? (
+              <>Resets at {resetTime}</>
+            ) : (
+              <>Daily limit reached. Try again later.</>
+            )
+          ) : credits < 2 ? (
             <>
               No credits remaining.{" "}
               <Button

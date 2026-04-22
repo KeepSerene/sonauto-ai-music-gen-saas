@@ -55,14 +55,29 @@ export async function POST(req: NextRequest) {
 
   // ─── Daily rate limit check ──────────────────────────────────────────
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const todayCount = await db.song.count({
-    where: { userId: session.user.id, createdAt: { gte: since } },
-  });
+
+  const [todayCount, oldestDailySong] = await Promise.all([
+    db.song.count({
+      where: { userId: session.user.id, createdAt: { gte: since } },
+    }),
+    db.song.findFirst({
+      where: { userId: session.user.id, createdAt: { gte: since } },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true },
+    }),
+  ]);
 
   if (todayCount >= DAILY_GENERATION_LIMIT) {
+    const resetAt = oldestDailySong
+      ? new Date(
+          oldestDailySong.createdAt.getTime() + 24 * 60 * 60 * 1000,
+        ).toISOString()
+      : null;
+
     return NextResponse.json(
       {
-        error: `You've reached your daily limit of ${DAILY_GENERATION_LIMIT} generations. Come back tomorrow!`,
+        error: `You've reached your daily limit of ${DAILY_GENERATION_LIMIT} generations.`,
+        resetAt,
       },
       {
         status: 429,
