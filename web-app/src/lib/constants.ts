@@ -301,4 +301,4 @@ export const AUTH_LAYOUT_FLOATING_ICONS = [
     left: "92%",
   },
 ] as const;
-export const DAILY_GENERATION_LIMIT = 3;
+export const DAILY_GENERATION_LIMIT = 2;

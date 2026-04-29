@@ -346,7 +346,7 @@ Next.js maintains a client-side router cache (RSC payload cache) in browser memo
 
 ### Daily Generation Limit
 
-Each authenticated user is limited to **3 song generations per rolling 24-hour window**. This is enforced server-side in `POST /api/generate` before any credits are touched:
+Each authenticated user is limited to **2 song generations per rolling 24-hour window**. This is enforced server-side in `POST /api/generate` before any credits are touched:
 
 ```ts
 // src/app/api/generate/route.ts
@@ -357,7 +357,7 @@ const todayCount = await db.song.count({
 
 if (todayCount >= DAILY_GENERATION_LIMIT) {
   return NextResponse.json(
-    { error: "You've reached your daily limit of 3 generations..." },
+    { error: "You've reached your daily limit of 2 generations..." },
     { status: 429, headers: { "Retry-After": "86400" } },
   );
 }
