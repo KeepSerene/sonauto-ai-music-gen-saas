@@ -205,9 +205,9 @@ Next.js App (Vercel)
      │
      ├─ /api/generate (POST)
      │       │
-     │       ├─ Rate limit check (DB count, rolling 24h window)
+     │       ├─ Rate limit check (GenerationEvent count, rolling 24h window)
      │       ├─ Atomic credit deduction (updateMany WHERE credits >= 2)
-     │       ├─ Song record created (status: "queued")
+     │       ├─ Song & GenerationEvent records created atomically
      │       └─ inngest.send("song/generate")
      │                   │
      │                   ▼
@@ -334,11 +334,11 @@ All new accounts must verify their email address before they can sign in. This p
 
 ### Daily Generation Limit — Rate-Limit Badge
 
-When a user exhausts their {DAILY_GENERATION_LIMIT} daily generations, a compact amber badge (icon + "Limit") appears in the sticky app header. The badge is intentionally terse to avoid crowding the header on small screens — the full context ("You've used all N daily generations. Resets at HH:MM.") is surfaced via a shadcn/ui Tooltip on hover/focus.
+When a user exhausts their `{DAILY_GENERATION_LIMIT}` daily generations, a compact amber badge (icon + "Limit") appears in the sticky app header. The badge is intentionally terse to avoid crowding the header on small screens — the full context ("You've used all `N` daily generations. Resets at HH:MM.") is surfaced via a shadcn/ui Tooltip on hover/focus.
 
 **How it computes the reset time:**
 
-The layout fetches the _oldest_ song created within the rolling 24-hour window and adds 24 hours to its `createdAt` timestamp. This gives the exact moment the window slides enough to allow a new generation, formatted in the user's local timezone by `toLocaleTimeString`.
+The layout fetches the oldest generation event from an immutable `GenerationEvent` ledger within the rolling 24-hour window and adds 24 hours to its `createdAt` timestamp. This gives the exact moment the window slides enough to allow a new generation, formatted in the user's local timezone by `toLocaleTimeString`. Because it queries an append-only ledger rather than the user's active song list, the rate limit calculation cannot be spoofed by deleting tracks.
 
 **Router cache caveat:**
 
@@ -346,12 +346,14 @@ Next.js maintains a client-side router cache (RSC payload cache) in browser memo
 
 ### Daily Generation Limit
 
-Each authenticated user is limited to **2 song generations per rolling 24-hour window**. This is enforced server-side in `POST /api/generate` before any credits are touched:
+Each authenticated user is limited to **2 song generations per rolling 24-hour window.**
+
+To prevent exploitation (where a user might generate, download, delete the track, and regenerate endlessly), the rate limit is completely decoupled from the actual `Song` records. Instead, it checks an immutable `GenerationEvent` ledger. This is enforced server-side in `POST /api/generate` before any credits are touched:
 
 ```ts
 // src/app/api/generate/route.ts
 const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-const todayCount = await db.song.count({
+const todayCount = await db.generationEvent.count({
   where: { userId: session.user.id, createdAt: { gte: since } },
 });
 
@@ -363,7 +365,11 @@ if (todayCount >= DAILY_GENERATION_LIMIT) {
 }
 ```
 
-When the limit is hit, a warning toast appears immediately and the `AppHeader` displays a persistent amber badge showing the exact local time the window resets (computed from the oldest song in the window + 24 h, formatted in the browser's local timezone).
+When a user successfully initiates a generation, a `Song` and a `GenerationEvent` are created atomically via a Prisma `$transaction`.
+
+### Important Limitation Design
+
+If a user manually cancels a queued song (which correctly refunds their 2 credits), that action does not erase the `GenerationEvent`. This intentionally burns one of their daily generation attempts, actively preventing malicious users from spamming and cancelling the compute queue while dodging rate limits.
 
 The limit is configured via a single constant — `DAILY_GENERATION_LIMIT` in `src/lib/constants.ts` — so it can be updated in one place.
 

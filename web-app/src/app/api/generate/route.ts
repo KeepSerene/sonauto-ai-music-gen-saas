@@ -53,14 +53,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // ─── Daily rate limit check ──────────────────────────────────────────
+  // ─── Daily rate limit check ───────
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-  const [todayCount, oldestDailySong] = await Promise.all([
-    db.song.count({
+  const [todayCount, oldestDailyEvent] = await Promise.all([
+    db.generationEvent.count({
       where: { userId: session.user.id, createdAt: { gte: since } },
     }),
-    db.song.findFirst({
+    db.generationEvent.findFirst({
       where: { userId: session.user.id, createdAt: { gte: since } },
       orderBy: { createdAt: "asc" },
       select: { createdAt: true },
@@ -68,9 +68,9 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (todayCount >= DAILY_GENERATION_LIMIT) {
-    const resetAt = oldestDailySong
+    const resetAt = oldestDailyEvent
       ? new Date(
-          oldestDailySong.createdAt.getTime() + 24 * 60 * 60 * 1000,
+          oldestDailyEvent.createdAt.getTime() + 24 * 60 * 60 * 1000,
         ).toISOString()
       : null;
 
@@ -114,20 +114,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 4. Create the Song record immediately (status: "queued")
-  const song = await db.song.create({
-    data: {
-      title: body.description.slice(0, 60),
-      userId: session.user.id,
-      mode: body.mode,
-      isInstrumental: body.isInstrumental,
-      audioDuration: body.audioDuration,
-      lyrics: body.mode === "custom-manual" ? body.lyrics : null,
-      status: "queued",
-    },
-  });
+  // 4. Create the Song record AND log the Generation Event atomically
+  const [song, _event] = await db.$transaction([
+    db.song.create({
+      data: {
+        title: body.description.slice(0, 60),
+        userId: session.user.id,
+        mode: body.mode,
+        isInstrumental: body.isInstrumental,
+        audioDuration: body.audioDuration,
+        lyrics: body.mode === "custom-manual" ? body.lyrics : null,
+        status: "queued",
+      },
+    }),
+    db.generationEvent.create({
+      data: {
+        userId: session.user.id,
+      },
+    }),
+  ]);
 
-  // 5. Fire the Inngest event — do NOT await the generation itself
+  // 5. Fire the Inngest event
   try {
     await inngest.send({
       name: "song/generate",

@@ -39,6 +39,11 @@ export type Like = $Result.DefaultSelection<Prisma.$LikePayload>
  */
 export type Category = $Result.DefaultSelection<Prisma.$CategoryPayload>
 /**
+ * Model GenerationEvent
+ * 
+ */
+export type GenerationEvent = $Result.DefaultSelection<Prisma.$GenerationEventPayload>
+/**
  * Model Session
  * 
  */
@@ -221,6 +226,16 @@ export class PrismaClient<
     * ```
     */
   get category(): Prisma.CategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.generationEvent`: Exposes CRUD operations for the **GenerationEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GenerationEvents
+    * const generationEvents = await prisma.generationEvent.findMany()
+    * ```
+    */
+  get generationEvent(): Prisma.GenerationEventDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.session`: Exposes CRUD operations for the **Session** model.
@@ -697,6 +712,7 @@ export namespace Prisma {
     Listen: 'Listen',
     Like: 'Like',
     Category: 'Category',
+    GenerationEvent: 'GenerationEvent',
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification'
@@ -718,7 +734,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "song" | "listen" | "like" | "category" | "session" | "account" | "verification"
+      modelProps: "user" | "song" | "listen" | "like" | "category" | "generationEvent" | "session" | "account" | "verification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1092,6 +1108,80 @@ export namespace Prisma {
           }
         }
       }
+      GenerationEvent: {
+        payload: Prisma.$GenerationEventPayload<ExtArgs>
+        fields: Prisma.GenerationEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GenerationEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GenerationEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          findFirst: {
+            args: Prisma.GenerationEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GenerationEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          findMany: {
+            args: Prisma.GenerationEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>[]
+          }
+          create: {
+            args: Prisma.GenerationEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          createMany: {
+            args: Prisma.GenerationEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GenerationEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>[]
+          }
+          delete: {
+            args: Prisma.GenerationEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          update: {
+            args: Prisma.GenerationEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.GenerationEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GenerationEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GenerationEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.GenerationEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GenerationEventPayload>
+          }
+          aggregate: {
+            args: Prisma.GenerationEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGenerationEvent>
+          }
+          groupBy: {
+            args: Prisma.GenerationEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GenerationEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GenerationEventCountArgs<ExtArgs>
+            result: $Utils.Optional<GenerationEventCountAggregateOutputType> | number
+          }
+        }
+      }
       Session: {
         payload: Prisma.$SessionPayload<ExtArgs>
         fields: Prisma.SessionFieldRefs
@@ -1415,6 +1505,7 @@ export namespace Prisma {
     listen?: ListenOmit
     like?: LikeOmit
     category?: CategoryOmit
+    generationEvent?: GenerationEventOmit
     session?: SessionOmit
     account?: AccountOmit
     verification?: VerificationOmit
@@ -1503,6 +1594,7 @@ export namespace Prisma {
     songs: number
     likes: number
     listens: number
+    generationEvents: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1511,6 +1603,7 @@ export namespace Prisma {
     songs?: boolean | UserCountOutputTypeCountSongsArgs
     likes?: boolean | UserCountOutputTypeCountLikesArgs
     listens?: boolean | UserCountOutputTypeCountListensArgs
+    generationEvents?: boolean | UserCountOutputTypeCountGenerationEventsArgs
   }
 
   // Custom InputTypes
@@ -1557,6 +1650,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountListensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ListenWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountGenerationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GenerationEventWhereInput
   }
 
 
@@ -1871,6 +1971,7 @@ export namespace Prisma {
     songs?: boolean | User$songsArgs<ExtArgs>
     likes?: boolean | User$likesArgs<ExtArgs>
     listens?: boolean | User$listensArgs<ExtArgs>
+    generationEvents?: boolean | User$generationEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1914,6 +2015,7 @@ export namespace Prisma {
     songs?: boolean | User$songsArgs<ExtArgs>
     likes?: boolean | User$likesArgs<ExtArgs>
     listens?: boolean | User$listensArgs<ExtArgs>
+    generationEvents?: boolean | User$generationEventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1927,6 +2029,7 @@ export namespace Prisma {
       songs: Prisma.$SongPayload<ExtArgs>[]
       likes: Prisma.$LikePayload<ExtArgs>[]
       listens: Prisma.$ListenPayload<ExtArgs>[]
+      generationEvents: Prisma.$GenerationEventPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2336,6 +2439,7 @@ export namespace Prisma {
     songs<T extends User$songsArgs<ExtArgs> = {}>(args?: Subset<T, User$songsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SongPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     likes<T extends User$likesArgs<ExtArgs> = {}>(args?: Subset<T, User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     listens<T extends User$listensArgs<ExtArgs> = {}>(args?: Subset<T, User$listensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ListenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    generationEvents<T extends User$generationEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$generationEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2878,6 +2982,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ListenScalarFieldEnum | ListenScalarFieldEnum[]
+  }
+
+  /**
+   * User.generationEvents
+   */
+  export type User$generationEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    where?: GenerationEventWhereInput
+    orderBy?: GenerationEventOrderByWithRelationInput | GenerationEventOrderByWithRelationInput[]
+    cursor?: GenerationEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GenerationEventScalarFieldEnum | GenerationEventScalarFieldEnum[]
   }
 
   /**
@@ -7310,6 +7438,1038 @@ export namespace Prisma {
 
 
   /**
+   * Model GenerationEvent
+   */
+
+  export type AggregateGenerationEvent = {
+    _count: GenerationEventCountAggregateOutputType | null
+    _min: GenerationEventMinAggregateOutputType | null
+    _max: GenerationEventMaxAggregateOutputType | null
+  }
+
+  export type GenerationEventMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: string | null
+  }
+
+  export type GenerationEventMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    userId: string | null
+  }
+
+  export type GenerationEventCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type GenerationEventMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type GenerationEventMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type GenerationEventCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type GenerationEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GenerationEvent to aggregate.
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GenerationEvents to fetch.
+     */
+    orderBy?: GenerationEventOrderByWithRelationInput | GenerationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GenerationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GenerationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GenerationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GenerationEvents
+    **/
+    _count?: true | GenerationEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GenerationEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GenerationEventMaxAggregateInputType
+  }
+
+  export type GetGenerationEventAggregateType<T extends GenerationEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateGenerationEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGenerationEvent[P]>
+      : GetScalarType<T[P], AggregateGenerationEvent[P]>
+  }
+
+
+
+
+  export type GenerationEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GenerationEventWhereInput
+    orderBy?: GenerationEventOrderByWithAggregationInput | GenerationEventOrderByWithAggregationInput[]
+    by: GenerationEventScalarFieldEnum[] | GenerationEventScalarFieldEnum
+    having?: GenerationEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GenerationEventCountAggregateInputType | true
+    _min?: GenerationEventMinAggregateInputType
+    _max?: GenerationEventMaxAggregateInputType
+  }
+
+  export type GenerationEventGroupByOutputType = {
+    id: string
+    createdAt: Date
+    userId: string
+    _count: GenerationEventCountAggregateOutputType | null
+    _min: GenerationEventMinAggregateOutputType | null
+    _max: GenerationEventMaxAggregateOutputType | null
+  }
+
+  type GetGenerationEventGroupByPayload<T extends GenerationEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GenerationEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GenerationEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GenerationEventGroupByOutputType[P]>
+            : GetScalarType<T[P], GenerationEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GenerationEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["generationEvent"]>
+
+  export type GenerationEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["generationEvent"]>
+
+  export type GenerationEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["generationEvent"]>
+
+  export type GenerationEventSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    userId?: boolean
+  }
+
+  export type GenerationEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "userId", ExtArgs["result"]["generationEvent"]>
+  export type GenerationEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GenerationEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GenerationEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GenerationEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GenerationEvent"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      userId: string
+    }, ExtArgs["result"]["generationEvent"]>
+    composites: {}
+  }
+
+  type GenerationEventGetPayload<S extends boolean | null | undefined | GenerationEventDefaultArgs> = $Result.GetResult<Prisma.$GenerationEventPayload, S>
+
+  type GenerationEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GenerationEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GenerationEventCountAggregateInputType | true
+    }
+
+  export interface GenerationEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GenerationEvent'], meta: { name: 'GenerationEvent' } }
+    /**
+     * Find zero or one GenerationEvent that matches the filter.
+     * @param {GenerationEventFindUniqueArgs} args - Arguments to find a GenerationEvent
+     * @example
+     * // Get one GenerationEvent
+     * const generationEvent = await prisma.generationEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GenerationEventFindUniqueArgs>(args: SelectSubset<T, GenerationEventFindUniqueArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GenerationEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GenerationEventFindUniqueOrThrowArgs} args - Arguments to find a GenerationEvent
+     * @example
+     * // Get one GenerationEvent
+     * const generationEvent = await prisma.generationEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GenerationEventFindUniqueOrThrowArgs>(args: SelectSubset<T, GenerationEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GenerationEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventFindFirstArgs} args - Arguments to find a GenerationEvent
+     * @example
+     * // Get one GenerationEvent
+     * const generationEvent = await prisma.generationEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GenerationEventFindFirstArgs>(args?: SelectSubset<T, GenerationEventFindFirstArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GenerationEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventFindFirstOrThrowArgs} args - Arguments to find a GenerationEvent
+     * @example
+     * // Get one GenerationEvent
+     * const generationEvent = await prisma.generationEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GenerationEventFindFirstOrThrowArgs>(args?: SelectSubset<T, GenerationEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GenerationEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GenerationEvents
+     * const generationEvents = await prisma.generationEvent.findMany()
+     * 
+     * // Get first 10 GenerationEvents
+     * const generationEvents = await prisma.generationEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const generationEventWithIdOnly = await prisma.generationEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GenerationEventFindManyArgs>(args?: SelectSubset<T, GenerationEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GenerationEvent.
+     * @param {GenerationEventCreateArgs} args - Arguments to create a GenerationEvent.
+     * @example
+     * // Create one GenerationEvent
+     * const GenerationEvent = await prisma.generationEvent.create({
+     *   data: {
+     *     // ... data to create a GenerationEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends GenerationEventCreateArgs>(args: SelectSubset<T, GenerationEventCreateArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GenerationEvents.
+     * @param {GenerationEventCreateManyArgs} args - Arguments to create many GenerationEvents.
+     * @example
+     * // Create many GenerationEvents
+     * const generationEvent = await prisma.generationEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GenerationEventCreateManyArgs>(args?: SelectSubset<T, GenerationEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GenerationEvents and returns the data saved in the database.
+     * @param {GenerationEventCreateManyAndReturnArgs} args - Arguments to create many GenerationEvents.
+     * @example
+     * // Create many GenerationEvents
+     * const generationEvent = await prisma.generationEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GenerationEvents and only return the `id`
+     * const generationEventWithIdOnly = await prisma.generationEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GenerationEventCreateManyAndReturnArgs>(args?: SelectSubset<T, GenerationEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GenerationEvent.
+     * @param {GenerationEventDeleteArgs} args - Arguments to delete one GenerationEvent.
+     * @example
+     * // Delete one GenerationEvent
+     * const GenerationEvent = await prisma.generationEvent.delete({
+     *   where: {
+     *     // ... filter to delete one GenerationEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GenerationEventDeleteArgs>(args: SelectSubset<T, GenerationEventDeleteArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GenerationEvent.
+     * @param {GenerationEventUpdateArgs} args - Arguments to update one GenerationEvent.
+     * @example
+     * // Update one GenerationEvent
+     * const generationEvent = await prisma.generationEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GenerationEventUpdateArgs>(args: SelectSubset<T, GenerationEventUpdateArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GenerationEvents.
+     * @param {GenerationEventDeleteManyArgs} args - Arguments to filter GenerationEvents to delete.
+     * @example
+     * // Delete a few GenerationEvents
+     * const { count } = await prisma.generationEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GenerationEventDeleteManyArgs>(args?: SelectSubset<T, GenerationEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GenerationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GenerationEvents
+     * const generationEvent = await prisma.generationEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GenerationEventUpdateManyArgs>(args: SelectSubset<T, GenerationEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GenerationEvents and returns the data updated in the database.
+     * @param {GenerationEventUpdateManyAndReturnArgs} args - Arguments to update many GenerationEvents.
+     * @example
+     * // Update many GenerationEvents
+     * const generationEvent = await prisma.generationEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GenerationEvents and only return the `id`
+     * const generationEventWithIdOnly = await prisma.generationEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GenerationEventUpdateManyAndReturnArgs>(args: SelectSubset<T, GenerationEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GenerationEvent.
+     * @param {GenerationEventUpsertArgs} args - Arguments to update or create a GenerationEvent.
+     * @example
+     * // Update or create a GenerationEvent
+     * const generationEvent = await prisma.generationEvent.upsert({
+     *   create: {
+     *     // ... data to create a GenerationEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GenerationEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GenerationEventUpsertArgs>(args: SelectSubset<T, GenerationEventUpsertArgs<ExtArgs>>): Prisma__GenerationEventClient<$Result.GetResult<Prisma.$GenerationEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GenerationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventCountArgs} args - Arguments to filter GenerationEvents to count.
+     * @example
+     * // Count the number of GenerationEvents
+     * const count = await prisma.generationEvent.count({
+     *   where: {
+     *     // ... the filter for the GenerationEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends GenerationEventCountArgs>(
+      args?: Subset<T, GenerationEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GenerationEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GenerationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GenerationEventAggregateArgs>(args: Subset<T, GenerationEventAggregateArgs>): Prisma.PrismaPromise<GetGenerationEventAggregateType<T>>
+
+    /**
+     * Group by GenerationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GenerationEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GenerationEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GenerationEventGroupByArgs['orderBy'] }
+        : { orderBy?: GenerationEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GenerationEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGenerationEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GenerationEvent model
+   */
+  readonly fields: GenerationEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GenerationEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GenerationEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GenerationEvent model
+   */
+  interface GenerationEventFieldRefs {
+    readonly id: FieldRef<"GenerationEvent", 'String'>
+    readonly createdAt: FieldRef<"GenerationEvent", 'DateTime'>
+    readonly userId: FieldRef<"GenerationEvent", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GenerationEvent findUnique
+   */
+  export type GenerationEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which GenerationEvent to fetch.
+     */
+    where: GenerationEventWhereUniqueInput
+  }
+
+  /**
+   * GenerationEvent findUniqueOrThrow
+   */
+  export type GenerationEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which GenerationEvent to fetch.
+     */
+    where: GenerationEventWhereUniqueInput
+  }
+
+  /**
+   * GenerationEvent findFirst
+   */
+  export type GenerationEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which GenerationEvent to fetch.
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GenerationEvents to fetch.
+     */
+    orderBy?: GenerationEventOrderByWithRelationInput | GenerationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GenerationEvents.
+     */
+    cursor?: GenerationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GenerationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GenerationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GenerationEvents.
+     */
+    distinct?: GenerationEventScalarFieldEnum | GenerationEventScalarFieldEnum[]
+  }
+
+  /**
+   * GenerationEvent findFirstOrThrow
+   */
+  export type GenerationEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which GenerationEvent to fetch.
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GenerationEvents to fetch.
+     */
+    orderBy?: GenerationEventOrderByWithRelationInput | GenerationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GenerationEvents.
+     */
+    cursor?: GenerationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GenerationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GenerationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GenerationEvents.
+     */
+    distinct?: GenerationEventScalarFieldEnum | GenerationEventScalarFieldEnum[]
+  }
+
+  /**
+   * GenerationEvent findMany
+   */
+  export type GenerationEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which GenerationEvents to fetch.
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GenerationEvents to fetch.
+     */
+    orderBy?: GenerationEventOrderByWithRelationInput | GenerationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GenerationEvents.
+     */
+    cursor?: GenerationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GenerationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GenerationEvents.
+     */
+    skip?: number
+    distinct?: GenerationEventScalarFieldEnum | GenerationEventScalarFieldEnum[]
+  }
+
+  /**
+   * GenerationEvent create
+   */
+  export type GenerationEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GenerationEvent.
+     */
+    data: XOR<GenerationEventCreateInput, GenerationEventUncheckedCreateInput>
+  }
+
+  /**
+   * GenerationEvent createMany
+   */
+  export type GenerationEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GenerationEvents.
+     */
+    data: GenerationEventCreateManyInput | GenerationEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GenerationEvent createManyAndReturn
+   */
+  export type GenerationEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many GenerationEvents.
+     */
+    data: GenerationEventCreateManyInput | GenerationEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GenerationEvent update
+   */
+  export type GenerationEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GenerationEvent.
+     */
+    data: XOR<GenerationEventUpdateInput, GenerationEventUncheckedUpdateInput>
+    /**
+     * Choose, which GenerationEvent to update.
+     */
+    where: GenerationEventWhereUniqueInput
+  }
+
+  /**
+   * GenerationEvent updateMany
+   */
+  export type GenerationEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GenerationEvents.
+     */
+    data: XOR<GenerationEventUpdateManyMutationInput, GenerationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which GenerationEvents to update
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * Limit how many GenerationEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GenerationEvent updateManyAndReturn
+   */
+  export type GenerationEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * The data used to update GenerationEvents.
+     */
+    data: XOR<GenerationEventUpdateManyMutationInput, GenerationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which GenerationEvents to update
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * Limit how many GenerationEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GenerationEvent upsert
+   */
+  export type GenerationEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GenerationEvent to update in case it exists.
+     */
+    where: GenerationEventWhereUniqueInput
+    /**
+     * In case the GenerationEvent found by the `where` argument doesn't exist, create a new GenerationEvent with this data.
+     */
+    create: XOR<GenerationEventCreateInput, GenerationEventUncheckedCreateInput>
+    /**
+     * In case the GenerationEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GenerationEventUpdateInput, GenerationEventUncheckedUpdateInput>
+  }
+
+  /**
+   * GenerationEvent delete
+   */
+  export type GenerationEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+    /**
+     * Filter which GenerationEvent to delete.
+     */
+    where: GenerationEventWhereUniqueInput
+  }
+
+  /**
+   * GenerationEvent deleteMany
+   */
+  export type GenerationEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GenerationEvents to delete
+     */
+    where?: GenerationEventWhereInput
+    /**
+     * Limit how many GenerationEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GenerationEvent without action
+   */
+  export type GenerationEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GenerationEvent
+     */
+    select?: GenerationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GenerationEvent
+     */
+    omit?: GenerationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GenerationEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Session
    */
 
@@ -10650,6 +11810,15 @@ export namespace Prisma {
   export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+  export const GenerationEventScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    userId: 'userId'
+  };
+
+  export type GenerationEventScalarFieldEnum = (typeof GenerationEventScalarFieldEnum)[keyof typeof GenerationEventScalarFieldEnum]
+
+
   export const SessionScalarFieldEnum: {
     id: 'id',
     expiresAt: 'expiresAt',
@@ -10807,6 +11976,7 @@ export namespace Prisma {
     songs?: SongListRelationFilter
     likes?: LikeListRelationFilter
     listens?: ListenListRelationFilter
+    generationEvents?: GenerationEventListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -10823,6 +11993,7 @@ export namespace Prisma {
     songs?: SongOrderByRelationAggregateInput
     likes?: LikeOrderByRelationAggregateInput
     listens?: ListenOrderByRelationAggregateInput
+    generationEvents?: GenerationEventOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -10842,6 +12013,7 @@ export namespace Prisma {
     songs?: SongListRelationFilter
     likes?: LikeListRelationFilter
     listens?: ListenListRelationFilter
+    generationEvents?: GenerationEventListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -11123,6 +12295,51 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Category"> | string
   }
 
+  export type GenerationEventWhereInput = {
+    AND?: GenerationEventWhereInput | GenerationEventWhereInput[]
+    OR?: GenerationEventWhereInput[]
+    NOT?: GenerationEventWhereInput | GenerationEventWhereInput[]
+    id?: StringFilter<"GenerationEvent"> | string
+    createdAt?: DateTimeFilter<"GenerationEvent"> | Date | string
+    userId?: StringFilter<"GenerationEvent"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GenerationEventOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type GenerationEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GenerationEventWhereInput | GenerationEventWhereInput[]
+    OR?: GenerationEventWhereInput[]
+    NOT?: GenerationEventWhereInput | GenerationEventWhereInput[]
+    createdAt?: DateTimeFilter<"GenerationEvent"> | Date | string
+    userId?: StringFilter<"GenerationEvent"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type GenerationEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    _count?: GenerationEventCountOrderByAggregateInput
+    _max?: GenerationEventMaxOrderByAggregateInput
+    _min?: GenerationEventMinOrderByAggregateInput
+  }
+
+  export type GenerationEventScalarWhereWithAggregatesInput = {
+    AND?: GenerationEventScalarWhereWithAggregatesInput | GenerationEventScalarWhereWithAggregatesInput[]
+    OR?: GenerationEventScalarWhereWithAggregatesInput[]
+    NOT?: GenerationEventScalarWhereWithAggregatesInput | GenerationEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GenerationEvent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GenerationEvent"> | Date | string
+    userId?: StringWithAggregatesFilter<"GenerationEvent"> | string
+  }
+
   export type SessionWhereInput = {
     AND?: SessionWhereInput | SessionWhereInput[]
     OR?: SessionWhereInput[]
@@ -11359,6 +12576,7 @@ export namespace Prisma {
     songs?: SongCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     listens?: ListenCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -11375,6 +12593,7 @@ export namespace Prisma {
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -11391,6 +12610,7 @@ export namespace Prisma {
     songs?: SongUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     listens?: ListenUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -11407,6 +12627,7 @@ export namespace Prisma {
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -11691,6 +12912,47 @@ export namespace Prisma {
   export type CategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GenerationEventCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutGenerationEventsInput
+  }
+
+  export type GenerationEventUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    userId: string
+  }
+
+  export type GenerationEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGenerationEventsNestedInput
+  }
+
+  export type GenerationEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GenerationEventCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    userId: string
+  }
+
+  export type GenerationEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GenerationEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type SessionCreateInput = {
@@ -12030,6 +13292,12 @@ export namespace Prisma {
     none?: ListenWhereInput
   }
 
+  export type GenerationEventListRelationFilter = {
+    every?: GenerationEventWhereInput
+    some?: GenerationEventWhereInput
+    none?: GenerationEventWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -12052,6 +13320,10 @@ export namespace Prisma {
   }
 
   export type ListenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GenerationEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12339,6 +13611,24 @@ export namespace Prisma {
     name?: SortOrder
   }
 
+  export type GenerationEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type GenerationEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type GenerationEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
   export type SessionCountOrderByAggregateInput = {
     id?: SortOrder
     expiresAt?: SortOrder
@@ -12507,6 +13797,13 @@ export namespace Prisma {
     connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
   }
 
+  export type GenerationEventCreateNestedManyWithoutUserInput = {
+    create?: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput> | GenerationEventCreateWithoutUserInput[] | GenerationEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GenerationEventCreateOrConnectWithoutUserInput | GenerationEventCreateOrConnectWithoutUserInput[]
+    createMany?: GenerationEventCreateManyUserInputEnvelope
+    connect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -12540,6 +13837,13 @@ export namespace Prisma {
     connectOrCreate?: ListenCreateOrConnectWithoutUserInput | ListenCreateOrConnectWithoutUserInput[]
     createMany?: ListenCreateManyUserInputEnvelope
     connect?: ListenWhereUniqueInput | ListenWhereUniqueInput[]
+  }
+
+  export type GenerationEventUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput> | GenerationEventCreateWithoutUserInput[] | GenerationEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GenerationEventCreateOrConnectWithoutUserInput | GenerationEventCreateOrConnectWithoutUserInput[]
+    createMany?: GenerationEventCreateManyUserInputEnvelope
+    connect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -12636,6 +13940,20 @@ export namespace Prisma {
     deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
   }
 
+  export type GenerationEventUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput> | GenerationEventCreateWithoutUserInput[] | GenerationEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GenerationEventCreateOrConnectWithoutUserInput | GenerationEventCreateOrConnectWithoutUserInput[]
+    upsert?: GenerationEventUpsertWithWhereUniqueWithoutUserInput | GenerationEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GenerationEventCreateManyUserInputEnvelope
+    set?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    disconnect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    delete?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    connect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    update?: GenerationEventUpdateWithWhereUniqueWithoutUserInput | GenerationEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GenerationEventUpdateManyWithWhereWithoutUserInput | GenerationEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GenerationEventScalarWhereInput | GenerationEventScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -12704,6 +14022,20 @@ export namespace Prisma {
     update?: ListenUpdateWithWhereUniqueWithoutUserInput | ListenUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ListenUpdateManyWithWhereWithoutUserInput | ListenUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ListenScalarWhereInput | ListenScalarWhereInput[]
+  }
+
+  export type GenerationEventUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput> | GenerationEventCreateWithoutUserInput[] | GenerationEventUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GenerationEventCreateOrConnectWithoutUserInput | GenerationEventCreateOrConnectWithoutUserInput[]
+    upsert?: GenerationEventUpsertWithWhereUniqueWithoutUserInput | GenerationEventUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GenerationEventCreateManyUserInputEnvelope
+    set?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    disconnect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    delete?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    connect?: GenerationEventWhereUniqueInput | GenerationEventWhereUniqueInput[]
+    update?: GenerationEventUpdateWithWhereUniqueWithoutUserInput | GenerationEventUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GenerationEventUpdateManyWithWhereWithoutUserInput | GenerationEventUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GenerationEventScalarWhereInput | GenerationEventScalarWhereInput[]
   }
 
   export type ListenCreateNestedManyWithoutSongInput = {
@@ -12942,6 +14274,20 @@ export namespace Prisma {
     update?: SongUpdateWithWhereUniqueWithoutCategoriesInput | SongUpdateWithWhereUniqueWithoutCategoriesInput[]
     updateMany?: SongUpdateManyWithWhereWithoutCategoriesInput | SongUpdateManyWithWhereWithoutCategoriesInput[]
     deleteMany?: SongScalarWhereInput | SongScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutGenerationEventsInput = {
+    create?: XOR<UserCreateWithoutGenerationEventsInput, UserUncheckedCreateWithoutGenerationEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGenerationEventsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutGenerationEventsNestedInput = {
+    create?: XOR<UserCreateWithoutGenerationEventsInput, UserUncheckedCreateWithoutGenerationEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGenerationEventsInput
+    upsert?: UserUpsertWithoutGenerationEventsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGenerationEventsInput, UserUpdateWithoutGenerationEventsInput>, UserUncheckedUpdateWithoutGenerationEventsInput>
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -13324,6 +14670,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type GenerationEventCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+  }
+
+  export type GenerationEventUncheckedCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+  }
+
+  export type GenerationEventCreateOrConnectWithoutUserInput = {
+    where: GenerationEventWhereUniqueInput
+    create: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type GenerationEventCreateManyUserInputEnvelope = {
+    data: GenerationEventCreateManyUserInput | GenerationEventCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -13475,6 +14841,31 @@ export namespace Prisma {
     songId?: StringFilter<"Listen"> | string
   }
 
+  export type GenerationEventUpsertWithWhereUniqueWithoutUserInput = {
+    where: GenerationEventWhereUniqueInput
+    update: XOR<GenerationEventUpdateWithoutUserInput, GenerationEventUncheckedUpdateWithoutUserInput>
+    create: XOR<GenerationEventCreateWithoutUserInput, GenerationEventUncheckedCreateWithoutUserInput>
+  }
+
+  export type GenerationEventUpdateWithWhereUniqueWithoutUserInput = {
+    where: GenerationEventWhereUniqueInput
+    data: XOR<GenerationEventUpdateWithoutUserInput, GenerationEventUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GenerationEventUpdateManyWithWhereWithoutUserInput = {
+    where: GenerationEventScalarWhereInput
+    data: XOR<GenerationEventUpdateManyMutationInput, GenerationEventUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type GenerationEventScalarWhereInput = {
+    AND?: GenerationEventScalarWhereInput | GenerationEventScalarWhereInput[]
+    OR?: GenerationEventScalarWhereInput[]
+    NOT?: GenerationEventScalarWhereInput | GenerationEventScalarWhereInput[]
+    id?: StringFilter<"GenerationEvent"> | string
+    createdAt?: DateTimeFilter<"GenerationEvent"> | Date | string
+    userId?: StringFilter<"GenerationEvent"> | string
+  }
+
   export type ListenCreateWithoutSongInput = {
     user: UserCreateNestedOneWithoutListensInput
   }
@@ -13524,6 +14915,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     listens?: ListenCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSongsInput = {
@@ -13539,6 +14931,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSongsInput = {
@@ -13617,6 +15010,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     listens?: ListenUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSongsInput = {
@@ -13632,6 +15026,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithWhereUniqueWithoutSongsInput = {
@@ -13671,6 +15066,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutListensInput = {
@@ -13686,6 +15082,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutListensInput = {
@@ -13764,6 +15161,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutListensInput = {
@@ -13779,6 +15177,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SongUpsertWithoutListensInput = {
@@ -13847,6 +15246,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     songs?: SongCreateNestedManyWithoutUserInput
     listens?: ListenCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLikesInput = {
@@ -13862,6 +15262,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
     listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLikesInput = {
@@ -13940,6 +15341,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     songs?: SongUpdateManyWithoutUserNestedInput
     listens?: ListenUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLikesInput = {
@@ -13955,6 +15357,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
     listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SongUpsertWithoutLikesInput = {
@@ -14073,6 +15476,86 @@ export namespace Prisma {
     data: XOR<SongUpdateManyMutationInput, SongUncheckedUpdateManyWithoutCategoriesInput>
   }
 
+  export type UserCreateWithoutGenerationEventsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    credits?: number
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    songs?: SongCreateNestedManyWithoutUserInput
+    likes?: LikeCreateNestedManyWithoutUserInput
+    listens?: ListenCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGenerationEventsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    credits?: number
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    songs?: SongUncheckedCreateNestedManyWithoutUserInput
+    likes?: LikeUncheckedCreateNestedManyWithoutUserInput
+    listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGenerationEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGenerationEventsInput, UserUncheckedCreateWithoutGenerationEventsInput>
+  }
+
+  export type UserUpsertWithoutGenerationEventsInput = {
+    update: XOR<UserUpdateWithoutGenerationEventsInput, UserUncheckedUpdateWithoutGenerationEventsInput>
+    create: XOR<UserCreateWithoutGenerationEventsInput, UserUncheckedCreateWithoutGenerationEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGenerationEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGenerationEventsInput, UserUncheckedUpdateWithoutGenerationEventsInput>
+  }
+
+  export type UserUpdateWithoutGenerationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    credits?: IntFieldUpdateOperationsInput | number
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    songs?: SongUpdateManyWithoutUserNestedInput
+    likes?: LikeUpdateManyWithoutUserNestedInput
+    listens?: ListenUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGenerationEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    credits?: IntFieldUpdateOperationsInput | number
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    songs?: SongUncheckedUpdateManyWithoutUserNestedInput
+    likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
+    listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -14086,6 +15569,7 @@ export namespace Prisma {
     songs?: SongCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     listens?: ListenCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -14101,6 +15585,7 @@ export namespace Prisma {
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -14132,6 +15617,7 @@ export namespace Prisma {
     songs?: SongUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     listens?: ListenUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -14147,6 +15633,7 @@ export namespace Prisma {
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -14162,6 +15649,7 @@ export namespace Prisma {
     songs?: SongCreateNestedManyWithoutUserInput
     likes?: LikeCreateNestedManyWithoutUserInput
     listens?: ListenCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -14177,6 +15665,7 @@ export namespace Prisma {
     songs?: SongUncheckedCreateNestedManyWithoutUserInput
     likes?: LikeUncheckedCreateNestedManyWithoutUserInput
     listens?: ListenUncheckedCreateNestedManyWithoutUserInput
+    generationEvents?: GenerationEventUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -14208,6 +15697,7 @@ export namespace Prisma {
     songs?: SongUpdateManyWithoutUserNestedInput
     likes?: LikeUpdateManyWithoutUserNestedInput
     listens?: ListenUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -14223,6 +15713,7 @@ export namespace Prisma {
     songs?: SongUncheckedUpdateManyWithoutUserNestedInput
     likes?: LikeUncheckedUpdateManyWithoutUserNestedInput
     listens?: ListenUncheckedUpdateManyWithoutUserNestedInput
+    generationEvents?: GenerationEventUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -14274,6 +15765,11 @@ export namespace Prisma {
 
   export type ListenCreateManyUserInput = {
     songId: string
+  }
+
+  export type GenerationEventCreateManyUserInput = {
+    id?: string
+    createdAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -14433,6 +15929,21 @@ export namespace Prisma {
 
   export type ListenUncheckedUpdateManyWithoutUserInput = {
     songId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GenerationEventUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GenerationEventUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GenerationEventUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ListenCreateManySongInput = {

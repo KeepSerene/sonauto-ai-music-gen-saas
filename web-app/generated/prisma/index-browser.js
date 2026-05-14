@@ -166,6 +166,12 @@ exports.Prisma.CategoryScalarFieldEnum = {
   name: 'name'
 };
 
+exports.Prisma.GenerationEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId'
+};
+
 exports.Prisma.SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
@@ -224,6 +230,7 @@ exports.Prisma.ModelName = {
   Listen: 'Listen',
   Like: 'Like',
   Category: 'Category',
+  GenerationEvent: 'GenerationEvent',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'

@@ -13,19 +13,20 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  credits       Int       @default(10)
-  songs         Song[]
-  likes         Like[]
-  listens       Listen[]
+  id               String            @id
+  name             String
+  email            String
+  emailVerified    Boolean           @default(false)
+  image            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
+  sessions         Session[]
+  accounts         Account[]
+  credits          Int               @default(10)
+  songs            Song[]
+  likes            Like[]
+  listens          Listen[]
+  generationEvents GenerationEvent[]
 
   @@unique([email])
   @@map("user")
@@ -84,6 +85,16 @@ model Category {
   songs Song[]
 
   @@map("category")
+}
+
+model GenerationEvent {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("generation_event")
 }
 
 model Session {

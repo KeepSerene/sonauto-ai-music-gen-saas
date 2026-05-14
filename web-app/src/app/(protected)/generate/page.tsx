@@ -17,29 +17,29 @@ async function GeneratePage() {
 
   if (!session?.user) return redirect("/auth/sign-in");
 
-  // Rolling 24-hour window - for Daily limit hit
+  // Rolling 24-hour window
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-  const [user, dailySongCount, oldestDailySong] = await Promise.all([
+  const [user, dailyEventCount, oldestDailyEvent] = await Promise.all([
     db.user.findUnique({
       where: { id: session.user.id },
       select: { credits: true },
     }),
-    db.song.count({
+    db.generationEvent.count({
       where: { userId: session.user.id, createdAt: { gte: since } },
     }),
-    db.song.findFirst({
+    db.generationEvent.findFirst({
       where: { userId: session.user.id, createdAt: { gte: since } },
       orderBy: { createdAt: "asc" },
       select: { createdAt: true },
     }),
   ]);
 
-  const isRateLimited = dailySongCount >= DAILY_GENERATION_LIMIT;
+  const isRateLimited = dailyEventCount >= DAILY_GENERATION_LIMIT;
   const rateLimitResetAt =
-    isRateLimited && oldestDailySong
+    isRateLimited && oldestDailyEvent
       ? new Date(
-          oldestDailySong.createdAt.getTime() + 24 * 60 * 60 * 1000,
+          oldestDailyEvent.createdAt.getTime() + 24 * 60 * 60 * 1000,
         ).toISOString()
       : null;
 
