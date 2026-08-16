@@ -135,14 +135,14 @@ The two services communicate over HTTP. The web app fires an Inngest background 
 ## 🤖 AI Models & Services
 
 | Layer       | Model / Service                                                                        | Purpose                                                                                                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Text**    | [Groq](https://groq.com) — `llama-3.3-70b-versatile`                                   | Generates style tags, lyrics, song title, and 3 genre categories from the user's description. Runs in parallel where possible.                                           |
+| ----------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- |
+| **Text**    | [Groq](https://groq.com) — `openai/gpt-oss-120b` (with automatic fallback)             | Generates style tags, lyrics, song title, and 3 genre categories from the user's description. Runs in parallel where possible.                                           |     |
 | **Audio**   | [ACE-Step](https://github.com/ace-step/ACE-Step)                                       | Open-source music generation model. Takes a comma-separated style/tag prompt and structured lyrics and synthesises a full audio waveform. Runs on Modal (NVIDIA L4 GPU). |
 | **Artwork** | [SDXL-Turbo](https://huggingface.co/stabilityai/sdxl-turbo) (`stabilityai/sdxl-turbo`) | Generates abstract, atmospheric album cover art from the style prompt. 2-step inference for fast generation. Runs on the same Modal container as ACE-Step.               |
 
 ### Groq Text Pipeline
 
-Every generation runs four Groq calls (some in parallel):
+Every generation runs four Groq calls (some in parallel). Model selection goes through a small preference-ordered fallback chain (`openai/gpt-oss-120b` → `openai/gpt-oss-20b` → `llama-3.1-8b-instant`) so a Groq model deprecation degrades gracefully instead of breaking generation — see `web-app/lib/groq.ts`.
 
 1. **`generateTags`** — converts the user description into ACE-Step's comma-separated tag format (`"pop, upbeat, female vocal, acoustic guitar, 120 bpm"`)
 2. **`generateLyrics`** — writes full, duration-scaled lyrics with `[verse]`, `[chorus]`, `[bridge]`, `[intro]`, `[outro]` markers (skipped for instrumental)
