@@ -134,11 +134,13 @@ The two services communicate over HTTP. The web app fires an Inngest background 
 
 ## 🤖 AI Models & Services
 
+<!-- prettier-ignore-start -->
 | Layer       | Model / Service                                                                        | Purpose                                                                                                                                                                  |
-| ----------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- |
-| **Text**    | [Groq](https://groq.com) — `openai/gpt-oss-120b` (with automatic fallback)             | Generates style tags, lyrics, song title, and 3 genre categories from the user's description. Runs in parallel where possible.                                           |     |
+| ----------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Text**    | [Groq](https://groq.com) — `openai/gpt-oss-120b` (with automatic fallback)             | Generates style tags, lyrics, song title, and 3 genre categories from the user's description. Runs in parallel where possible.                                           |
 | **Audio**   | [ACE-Step](https://github.com/ace-step/ACE-Step)                                       | Open-source music generation model. Takes a comma-separated style/tag prompt and structured lyrics and synthesises a full audio waveform. Runs on Modal (NVIDIA L4 GPU). |
 | **Artwork** | [SDXL-Turbo](https://huggingface.co/stabilityai/sdxl-turbo) (`stabilityai/sdxl-turbo`) | Generates abstract, atmospheric album cover art from the style prompt. 2-step inference for fast generation. Runs on the same Modal container as ACE-Step.               |
+<!-- prettier-ignore-end -->
 
 ### Groq Text Pipeline
 
