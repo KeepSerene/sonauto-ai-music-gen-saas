@@ -13,7 +13,9 @@ const MODEL_PREFERENCE = [
   "llama-3.1-8b-instant",
 ] as const;
 
-let activeModel: string = MODEL_PREFERENCE[0];
+type GroqModel = (typeof MODEL_PREFERENCE)[number];
+
+let activeModel: GroqModel = MODEL_PREFERENCE[0];
 
 function isDecommissionedError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
@@ -24,7 +26,7 @@ function isDecommissionedError(error: unknown): boolean {
 }
 
 async function generateWithFallback(opts: { system: string; prompt: string }) {
-  const startIndex = Math.max(0, MODEL_PREFERENCE.indexOf(activeModel as any));
+  const startIndex = Math.max(0, MODEL_PREFERENCE.indexOf(activeModel));
   const candidates = MODEL_PREFERENCE.slice(startIndex);
 
   for (const [offset, modelId] of candidates.entries()) {

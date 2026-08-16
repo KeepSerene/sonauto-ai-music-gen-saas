@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 4. Create the Song record AND log the Generation Event atomically
-  const [song, _event] = await db.$transaction([
+  const [song] = await db.$transaction([
     db.song.create({
       data: {
         title: body.description.slice(0, 60),
